@@ -68,3 +68,4 @@ while RUN:
     print (curSpeed,tarSpeed)
     time.sleep(0.1)
     
+#current error 34 and 36 need nth term instead of (curSpeed - 10)/ACCELERATION     nth term - ACCELERATION to work out amount of terns neaded   or triginometry with the curSpeed and 
