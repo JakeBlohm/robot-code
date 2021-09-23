@@ -4,14 +4,17 @@
 
 import math
 import random
+import time
 # import numpy
 global RUN
 global ACCELERATION
 global PRECISION
+global MAXSPEED
 
 # Settings
 PRECISION = 0.01
-ACCELERATION = 71.25
+ACCELERATION = 3
+MAXSPEED = 300
 RUN = True
 
 def Inputs():
@@ -21,25 +24,17 @@ def Inputs():
     return angles
 
 # Calculate the vector required to move thicc arm
-def VelCalc(angles):
+def MaxVelCalc(angles, curSpeed):
     global RUN
     if angles[0] > (angles[1] - PRECISION) and angles[0] < (angles[1] + PRECISION):
         RUN = False
         return 0
     else:
         difAngle = (angles[0] - angles[1])
-        if difAngle >= 10:
-            return 600
-        if difAngle <= -10:
-            return -600
-        elif difAngle >= 2:
-            return difAngle * ACCELERATION
-        elif difAngle <= -2:
-            return difAngle * ACCELERATION
-        elif difAngle > 0.5:
-            return 30
-        elif difAngle < -0.5:
-            return -30
+        if difAngle >= ((curSpeed - 10)*((curSpeed - 10)/ACCELERATION))/200:
+            return 300
+        if difAngle <= (-((curSpeed - 10)*((curSpeed - 10)/ACCELERATION))/200):
+            return -300
         elif difAngle > 0:
             return 10
         elif difAngle < 0:
@@ -47,13 +42,29 @@ def VelCalc(angles):
         else:
             return random.randint(-36000,36000)
 
+def VelCalc(tarSpeed, curSpeed):
+    difSpeed = (tarSpeed - curSpeed)
+    if difSpeed > 0 and curSpeed <= (MAXSPEED - ACCELERATION):
+        curSpeed += ACCELERATION
+    elif difSpeed < 0 and curSpeed >= (ACCELERATION - MAXSPEED):
+        curSpeed -= ACCELERATION
+    return curSpeed
+
+
 # Encoder will replace
-def EncoderOut(motor, angles):
-    angles[1] += (motor / 1000)
+def EncoderOut(curSpeed, angles):
+    angles[1] += (curSpeed / 100)
     return angles 
 
+curSpeed = 0
+tarSpeed = 0
+angles = Inputs()
+
 while RUN:
-    motor = VelCalc(angles)
-    angles = EncoderOut(motor, angles)
+    tarSpeed = MaxVelCalc(angles, curSpeed)
+    curSpeed = VelCalc(tarSpeed, curSpeed)
+    angles = EncoderOut(curSpeed, angles)
     print(angles)
+    print (curSpeed,tarSpeed)
+    time.sleep(0.1)
     
