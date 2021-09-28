@@ -1,17 +1,7 @@
-# Jake Blohm, Isaac Roberts
-# 23/9/2021
-# Robot Arm code
 import time
 
 class Motor:
-    # Settings
-    PRECISION = 0
-    ACCELERATION = 0
-    MAXSPEED = 0
-    MINSPEED = 0
-    CYCLESPERSECOND = 0
     RUN = True
-
     motor = []
 
     def __init__(self, precision, acceleration, maxSpeed, minSpeed):
@@ -26,14 +16,16 @@ class Motor:
             Motor.RUN = False
             return 0
         else:
+            #fix for the  big if statment below
             if curSpeed == self.MAXSPEED:
                 curSpeed -= self.ACCELERATION
             elif curSpeed == -self.MAXSPEED:
                 curSpeed += self.ACCELERATION
+            #Set target speeds
             difAngle = (tarAngle - curAngle)
             if difAngle >= ((((curSpeed+self.ACCELERATION)/self.ACCELERATION)+1)*(((curSpeed+self.ACCELERATION))/2))/self.CYCLESPERSECOND:
                 return self.MAXSPEED
-            if difAngle <= 0:
+            if difAngle <= -(((((curSpeed-self.ACCELERATION)/self.ACCELERATION)-1)*(((curSpeed-self.ACCELERATION))/2))/self.CYCLESPERSECOND):
                 return -self.MAXSPEED
             elif difAngle > 0:
                 return self.MINSPEED
@@ -42,7 +34,7 @@ class Motor:
             else:
                 print("MAJOR ERROR")
                 Motor.RUN = False
-
+    # Set the speed
     def VelCalc(self, tarSpeed, curSpeed):
         difSpeed = (tarSpeed - curSpeed)
         if difSpeed > 0 and curSpeed <= (self.MAXSPEED - self.ACCELERATION):
