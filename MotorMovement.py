@@ -63,6 +63,4 @@ class Motor:
         motor[3] = self.VelCalc(motor[2], motor[3])
         motor = self.EncoderOut(motor[3], motor)
         print(motor)
-        print("")
-        time.sleep(1/self.CYCLESPERSECOND)
 
