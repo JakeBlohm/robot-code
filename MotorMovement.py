@@ -1,79 +1,68 @@
 # Jake Blohm, Isaac Roberts
 # 23/9/2021
 # Robot Arm code
-import os
-import math
-import random
 import time
-# import numpy
-global RUN
-global ACCELERATION
-global PRECISION
-global MAXSPEED
-global CYCLESPERSECOND
-global MINSPEED
 
-# Settings
-PRECISION = 0.01
-ACCELERATION = 3
-MAXSPEED = 300
-MINSPEED = 9
-CYCLESPERSECOND = 1000
-RUN = True
+class Motor:
+    # Settings
+    PRECISION = 0
+    ACCELERATION = 0
+    MAXSPEED = 0
+    MINSPEED = 0
+    CYCLESPERSECOND = 0
+    RUN = True
 
-def Inputs():
-    tarAngle = float(input("Target Angle: "))
-    curAngle = float(input("Current Angle: "))
-    angles = [tarAngle, curAngle]
-    return angles
+    motor = []
 
-# Calculate the vector required to move thicc arm
-def MaxVelCalc(angles, curSpeed):
-    global RUN
-    if angles[0] > (angles[1] - PRECISION) and angles[0] < (angles[1] + PRECISION):
-        RUN = False
-        return 0
-    else:
-        if curSpeed == MAXSPEED:
-            curSpeed -= ACCELERATION
-        elif curSpeed == - MAXSPEED:
-            curSpeed += ACCELERATION
-        difAngle = (angles[0] - angles[1])
-        if difAngle >= ((((curSpeed+ACCELERATION)/ACCELERATION)+1)*(((curSpeed+ACCELERATION))/2))/CYCLESPERSECOND:
-            return MAXSPEED
-        if difAngle <= 0:
-            return -MAXSPEED
-        elif difAngle > 0:
-            return MINSPEED
-        elif difAngle < 0:
-            return -MINSPEED
+    def __init__(self, precision, acceleration, maxSpeed, minSpeed):
+        self.PRECISION = precision
+        self.ACCELERATION = acceleration
+        self.MAXSPEED = maxSpeed
+        self.MINSPEED = minSpeed
+
+    # Calculate the vector required to move thicc arm
+    def MaxVelCalc(self, tarAngle, curAngle, curSpeed):
+        if tarAngle > (curAngle - self.PRECISION) and tarAngle < (curAngle + self.PRECISION):
+            Motor.RUN = False
+            return 0
         else:
-            print("MAJOR ERROR")
-            RUN = False
+            if curSpeed == self.MAXSPEED:
+                curSpeed -= self.ACCELERATION
+            elif curSpeed == -self.MAXSPEED:
+                curSpeed += self.ACCELERATION
+            difAngle = (tarAngle - curAngle)
+            if difAngle >= ((((curSpeed+self.ACCELERATION)/self.ACCELERATION)+1)*(((curSpeed+self.ACCELERATION))/2))/self.CYCLESPERSECOND:
+                return self.MAXSPEED
+            if difAngle <= 0:
+                return -self.MAXSPEED
+            elif difAngle > 0:
+                return self.MINSPEED
+            elif difAngle < 0:
+                return -self.MINSPEED
+            else:
+                print("MAJOR ERROR")
+                Motor.RUN = False
 
-def VelCalc(tarSpeed, curSpeed):
-    difSpeed = (tarSpeed - curSpeed)
-    if difSpeed > 0 and curSpeed <= (MAXSPEED - ACCELERATION):
-        curSpeed += ACCELERATION
-    elif difSpeed < 0 and curSpeed >= (ACCELERATION - MAXSPEED):
-        curSpeed -= ACCELERATION
-    return curSpeed
+    def VelCalc(self, tarSpeed, curSpeed):
+        difSpeed = (tarSpeed - curSpeed)
+        if difSpeed > 0 and curSpeed <= (self.MAXSPEED - self.ACCELERATION):
+            curSpeed += self.ACCELERATION
+        elif difSpeed < 0 and curSpeed >= (self.ACCELERATION - self.MAXSPEED):
+            curSpeed -= self.ACCELERATION
+        return curSpeed
 
 
-# Encoder will replace
-def EncoderOut(curSpeed, angles):
-    angles[1] += (curSpeed / CYCLESPERSECOND)
-    return angles 
+    # Encoder will replace
+    def EncoderOut(self, curSpeed, motor):
+        motor[1] += (curSpeed / self.CYCLESPERSECOND)
+        return motor
 
-curSpeed = 0
-tarSpeed = 0
-angles = Inputs()
-while RUN:
-    tarSpeed = MaxVelCalc(angles, curSpeed)
-    curSpeed = VelCalc(tarSpeed, curSpeed)
-    angles = EncoderOut(curSpeed, angles)
-    print(angles)
-    print (curSpeed,tarSpeed)
-    time.sleep(1/CYCLESPERSECOND)
-    
-#current error 34 and 36 need nth term instead of (curSpeed - 10)/ACCELERATION     nth term - ACCELERATION to work out amount of terns neaded   or triginometry with the curSpeed and 
+
+    def MotorMove(self, motor):
+        motor[2] = self.MaxVelCalc(motor[0], motor[1], motor[3])
+        motor[3] = self.VelCalc(motor[2], motor[3])
+        motor = self.EncoderOut(motor[3], motor)
+        print(motor)
+        print("")
+        time.sleep(1/self.CYCLESPERSECOND)
+
