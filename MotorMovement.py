@@ -1,7 +1,7 @@
 # Jake Blohm, Isaac Roberts
 # 23/9/2021
 # Robot Arm code
-
+import os
 import math
 import random
 import time
@@ -10,11 +10,15 @@ global RUN
 global ACCELERATION
 global PRECISION
 global MAXSPEED
+global CYCLESPERSECOND
+global MINSPEED
 
 # Settings
 PRECISION = 0.01
 ACCELERATION = 3
 MAXSPEED = 300
+MINSPEED = 9
+CYCLESPERSECOND = 1000
 RUN = True
 
 def Inputs():
@@ -30,17 +34,22 @@ def MaxVelCalc(angles, curSpeed):
         RUN = False
         return 0
     else:
+        if curSpeed == MAXSPEED:
+            curSpeed -= ACCELERATION
+        elif curSpeed == - MAXSPEED:
+            curSpeed += ACCELERATION
         difAngle = (angles[0] - angles[1])
-        if difAngle >= ((curSpeed - 10)*((curSpeed - 10)/ACCELERATION))/200:
-            return 300
-        if difAngle <= (-((curSpeed - 10)*((curSpeed - 10)/ACCELERATION))/200):
-            return -300
+        if difAngle >= ((((curSpeed+ACCELERATION)/ACCELERATION)+1)*(((curSpeed+ACCELERATION))/2))/CYCLESPERSECOND:
+            return MAXSPEED
+        if difAngle <= 0:
+            return -MAXSPEED
         elif difAngle > 0:
-            return 10
+            return MINSPEED
         elif difAngle < 0:
-            return -10
+            return -MINSPEED
         else:
-            return random.randint(-36000,36000)
+            print("MAJOR ERROR")
+            RUN = False
 
 def VelCalc(tarSpeed, curSpeed):
     difSpeed = (tarSpeed - curSpeed)
@@ -53,19 +62,18 @@ def VelCalc(tarSpeed, curSpeed):
 
 # Encoder will replace
 def EncoderOut(curSpeed, angles):
-    angles[1] += (curSpeed / 100)
+    angles[1] += (curSpeed / CYCLESPERSECOND)
     return angles 
 
 curSpeed = 0
 tarSpeed = 0
 angles = Inputs()
-
 while RUN:
     tarSpeed = MaxVelCalc(angles, curSpeed)
     curSpeed = VelCalc(tarSpeed, curSpeed)
     angles = EncoderOut(curSpeed, angles)
     print(angles)
     print (curSpeed,tarSpeed)
-    time.sleep(0.1)
+    time.sleep(1/CYCLESPERSECOND)
     
 #current error 34 and 36 need nth term instead of (curSpeed - 10)/ACCELERATION     nth term - ACCELERATION to work out amount of terns neaded   or triginometry with the curSpeed and 
