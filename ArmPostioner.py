@@ -1,7 +1,8 @@
 # Input: Coords + arm geo + joint limits
 # Return: motor targetAngle
+import math
 
-#GLOBAL is good
+#GLOBAL is good - not really
 global MOTOR_ONE_OFFSET
 global MOTOR_TWO_OFFSET
 global MOTOR_THREE_OFFSET
@@ -31,8 +32,28 @@ SEGMENT_TWO = 20
 def TEMP_Input():
     Y = int(input("Y"))
     X = int(input("X"))
+    return [X,Y]
+    
 
-#MotorOne position calc
+#MotorOne position calculation
 
-motorOne = ()
+coords = TEMP_Input()
+
+def MotorOneCalc(X, Y):
+    motorOne = (math.sqrt(X^2*Y^2))
+
+def AllMotorCalc(coords):
+    MotorOneCalc(coords[0],coords[1])
+    
+
+# Math
+'''
+X^2 * Y^2 = hyp
+bad + good = meh
+meh = cos (all/Hyp)
+bad = tan (Y/X)
+good =cos (all/hyp) - tan(Y/X)
+
+ALL TRIG IS IN RADIANS
+'''
 
