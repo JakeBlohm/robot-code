@@ -1,8 +1,5 @@
-# Jake Blohm, Isaac Roberts
-# 23/9/2021
-# Robot Arm code
-
 from MotorMovement import Motor
+from ArmPostioner import AllMotorCalc
 import time
 
 #Main Settings
@@ -13,15 +10,20 @@ MotorOne = Motor(0.01, 3, 300, 9)
 
 # will be replaced by encoder and other code
 def Inputs():
-    tarAngle = float(input("Target Angle: "))
     curAngle = float(input("Current Angle: "))
-    motor = [tarAngle, curAngle, 0, 0]
+    motor = [0, curAngle, 0, 0]
     return motor
 
+def TEMP_Input():
+    Y = int(input("Y"))
+    X = int(input("X"))
+    return [X,Y]
 
+coords = TEMP_Input()
 motorOne = Inputs()
 
 while Motor.RUN:
+    motorOne[0] = AllMotorCalc(coords)
     MotorOne.MotorMove(motorOne)
     time.sleep(1/Motor.CYCLESPERSECOND)
 

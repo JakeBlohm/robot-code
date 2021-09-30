@@ -12,6 +12,9 @@ global SEGMENT_ONE
 global SEGMENT_TWO
 global ALL_HORIZONTAL_OFFSET
 
+# Home/Initial position of the thicc arm
+HOME_MOTOR_ONE = 0
+
 # Motor Offsets 
 # 'Horizontal' Offsets
 MOTOR_TWO_OFFSET = 0
@@ -29,31 +32,19 @@ GRIPPER_OFFSET = 0
 SEGMENT_ONE = 30
 SEGMENT_TWO = 20
 
-def TEMP_Input():
-    Y = int(input("Y"))
-    X = int(input("X"))
-    return [X,Y]
-    
-
 #MotorOne position calculation
 
-coords = TEMP_Input()
 
 def MotorOneCalc(X, Y):
-    motorOne = (math.sqrt(X^2*Y^2))
+    if (ALL_HORIZONTAL_OFFSET == 0 and X == 0 and Y > 0) or (X == 0 and Y == 0):
+        return HOME_MOTOR_ONE
+    elif ALL_HORIZONTAL_OFFSET == 0 and X == 0 and Y < 0:
+        return 180
+    tarAngle = ((math.degrees(math.acos(ALL_HORIZONTAL_OFFSET/(math.sqrt((X**2)+(Y**2))))))-(math.degrees(math.atan(Y/X))))
+    if X < 0:
+        tarAngle -= 180
+    return tarAngle
 
 def AllMotorCalc(coords):
-    MotorOneCalc(coords[0],coords[1])
-    
-
-# Math
-'''
-X^2 * Y^2 = hyp
-bad + good = meh
-meh = cos (all/Hyp)
-bad = tan (Y/X)
-good =cos (all/hyp) - tan(Y/X)
-
-ALL TRIG IS IN RADIANS
-'''
-
+    motorOneTarAngle = MotorOneCalc(coords[0],coords[1])
+    return motorOneTarAngle
