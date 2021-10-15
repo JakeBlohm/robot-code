@@ -10,10 +10,13 @@ global MOTOR_FOUR_OFFSET
 global MOTOR_FIVE_OFFSET
 global SEGMENT_ONE
 global SEGMENT_TWO
+global BASE_HIGHT
 global ALL_HORIZONTAL_OFFSET
 
 # Home/Initial position of the thicc arm
 HOME_MOTOR_ONE = 0
+HOME_MOTOR_TWO = 0
+HOME_MOTOR_THREE = 0
 
 # Motor Offsets 
 # 'Horizontal' Offsets
@@ -29,6 +32,7 @@ MOTOR_FIVE_OFFSET = 0
 GRIPPER_OFFSET = 0
 
 #Segments
+BASE_HIGHT = 0
 SEGMENT_ONE = 30
 SEGMENT_TWO = 20
 
@@ -45,6 +49,16 @@ def MotorOneCalc(X, Y):
         tarAngle -= 180
     return tarAngle
 
+def MotorTwoPlusThreeCalc(X, Y, Z):
+	tarDistance = (math.sqrt((Z**2)+((math.sqrt((X**2)+(Y**2)))**2)))
+	mTwoTAngle = 90-(math.degrees(math.sin(Z/tarDistance)))+(math.degrees(math.acos(((SEGMENT_ONE**2)+(tarDistance**2)-(SEGMENT_TWO**2))/(2*SEGMENT_ONE*tarDistance))))
+	mThreeTAngle = 180-(math.degrees(math.acos(((SEGMENT_ONE**2)+(SEGMENT_TWO**2)-(tarDistance**2))/(2*SEGMENT_ONE*SEGMENT_TWO))))
+	return [mTwoTAngle, mThreeTAngle]
+	
+
 def AllMotorCalc(coords):
-    motorOneTarAngle = MotorOneCalc(coords[0],coords[1])
-    return motorOneTarAngle
+	mOneTAngle = MotorOneCalc(coords[0], coords[1])
+	mTwoTAngle = MotorTwoPlusThreeCalc(coords[0], coords[1], coords[2])
+	mThreeTAngle = MotorTwoPlusThreeCalc(coords[0], coords[1], coords[2])
+	allMTAngle = [mOneTAngle, mTwoTAngle, mThreeTAngle]
+	return allMTAngle
