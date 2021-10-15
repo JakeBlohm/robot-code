@@ -2,8 +2,10 @@
 from GUI import GUIUpdate
 from MotorMovement import Motor
 from ArmPostioner import AllMotorCalc
+from Validation import CoordsValidation
 import time
 import os
+import math
 
 Clear = (lambda: os.system("cls"))
 
@@ -35,11 +37,14 @@ motorOne = Inputs()
 motorTwo = Inputs()
 motorThree =  Inputs()
 
+#Main Loop
+
 while ((MotorOneRun ==  MotorTwoRun == MotorThreeRun == False) == False):
     if DEVMODE == False:
         Clear()
     allMCAngle = [motorOne[1], motorTwo[1], motorThree[1]]
     GUIUpdate(allMCAngle)
+    coords = CoordsValidation(coords)
     allMTAngle = AllMotorCalc(coords)
     motorOne[0] = allMTAngle[0]
     motorTwo[0] = allMTAngle[1]

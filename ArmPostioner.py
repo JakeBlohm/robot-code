@@ -38,10 +38,11 @@ BASE_HIGHT = 0
 SEGMENT_ONE = 30
 SEGMENT_TWO = 20
 
+MAX_ARM_LENGTH = (SEGMENT_ONE + SEGMENT_TWO)
 # Memory
 
-lastCoords = [HOME_MOTOR_ONE, HOME_MOTOR_TWO, HOME_MOTOR_THREE]
-lastAngles = []
+lastCoords = [0, 0, 0]
+lastAngles = [0, 0, 0]
 
 #MotorOne position calculation
 

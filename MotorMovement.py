@@ -48,6 +48,7 @@ class Motor:
     # Encoder will replace
     def EncoderOut(self, curSpeed, motor):
         motor[1] += (curSpeed / self.CYCLESPERSECOND)
+        motor[1] = round(motor[1], 4)
         return motor
 
 
