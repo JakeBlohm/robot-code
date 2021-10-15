@@ -5,7 +5,6 @@ from ArmPostioner import AllMotorCalc
 from Validation import CoordsValidation
 import time
 import os
-import math
 
 Clear = (lambda: os.system("cls"))
 
