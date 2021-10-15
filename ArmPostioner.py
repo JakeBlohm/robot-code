@@ -12,6 +12,8 @@ global SEGMENT_ONE
 global SEGMENT_TWO
 global BASE_HIGHT
 global ALL_HORIZONTAL_OFFSET
+global lastCoords
+global lastAngles
 
 # Home/Initial position of the thicc arm
 HOME_MOTOR_ONE = 0
@@ -36,6 +38,11 @@ BASE_HIGHT = 0
 SEGMENT_ONE = 30
 SEGMENT_TWO = 20
 
+# Memory
+
+lastCoords = [HOME_MOTOR_ONE, HOME_MOTOR_TWO, HOME_MOTOR_THREE]
+lastAngles = []
+
 #MotorOne position calculation
 
 
@@ -57,8 +64,15 @@ def MotorTwoPlusThreeCalc(X, Y, Z):
 	
 
 def AllMotorCalc(coords):
-	mOneTAngle = MotorOneCalc(coords[0], coords[1])
-	mTwoTAngle = MotorTwoPlusThreeCalc(coords[0], coords[1], coords[2])
-	mThreeTAngle = MotorTwoPlusThreeCalc(coords[0], coords[1], coords[2])
-	allMTAngle = [mOneTAngle, mTwoTAngle, mThreeTAngle]
-	return allMTAngle
+	global lastCoords
+	global lastAngles
+	if coords != lastCoords:
+		mOneTAngle = MotorOneCalc(coords[0], coords[1])
+		mTwoTAngle = MotorTwoPlusThreeCalc(coords[0], coords[1], coords[2])[0]
+		mThreeTAngle = MotorTwoPlusThreeCalc(coords[0], coords[1], coords[2])[1]
+		allMTAngle = [mOneTAngle, mTwoTAngle, mThreeTAngle]
+		lastCoords = coords
+		lastAngles = allMTAngle
+		return allMTAngle
+	else:
+		return lastAngles

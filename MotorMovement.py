@@ -15,7 +15,8 @@ class Motor:
     # Calculate the vector required to move thicc arm
     def MaxVelCalc(self, tarAngle, curAngle, curSpeed):
         if tarAngle > (curAngle - self.PRECISION) and tarAngle < (curAngle + self.PRECISION):
-            Motor.RUN = False
+            self.RUN = False
+            print("ERROR")
             return 0
         else:
             #fix for the  big if statment below
@@ -35,7 +36,7 @@ class Motor:
                 return -self.MINSPEED
             else:
                 print("MAJOR ERROR")
-                Motor.RUN = False
+                self.RUN = False
     # Set the speed
     def VelCalc(self, tarSpeed, curSpeed):
         difSpeed = (tarSpeed - curSpeed)

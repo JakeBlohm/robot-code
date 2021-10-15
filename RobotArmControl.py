@@ -8,7 +8,9 @@ Motor.CYCLESPERSECOND = 1000
 
 #Motor settings - Precision/Acceleration/Max Speed/Min Speed
 MotorOne = Motor(0.01, 3, 300, 9)
-
+MotorTwo = Motor(0.01, 3, 300, 9)
+MotorThree = Motor(0.01, 3, 300, 9)
+Motor.RUN = True
 # will be replaced by encoder and other code
 def Inputs():
     curAngle = float(input("Current Angle: "))
@@ -20,13 +22,33 @@ def TEMP_Input():
 	X = int(input("X"))
 	Z = int(input("Z"))
 	return [X, Y, Z]
-
 coords = TEMP_Input()
 motorOne = Inputs()
+motorTwo = Inputs()
+motorThree = Inputs()
 
-while Motor.RUN:
-    motorOne[0] = AllMotorCalc(coords)[0]
-    MotorOne.MotorMove(motorOne)
-	MotorTwo.MotorMove(motorTwo)
-	MotorThree.MotorMove(motorThree)
+
+def run():
+    if MotorOne.RUN == False and MotorTwo.RUN == False and MotorThree.RUN == False:
+        return False
+    else:
+        return True 
+
+while run():
+    AllMTAngle = AllMotorCalc(coords)
+    motorOne[0] = AllMTAngle[0]
+    motorTwo[0] = AllMTAngle[1]
+    motorThree[0] = AllMTAngle[2]
+    if motorOne[0] <= (motorOne[1] - MotorOne.PRECISION) or motorOne[0] >= (motorOne[1] + MotorOne.PRECISION):
+        MotorOne.MotorMove(motorOne)
+    else:
+        MotorOne.RUN = False
+    if motorTwo[0] <= (motorTwo[1] - MotorTwo.PRECISION) or motorTwo[0] >= (motorTwo[1] + MotorTwo.PRECISION):
+        MotorTwo.MotorMove(motorTwo)
+    else:
+        MotorTwo.RUN = False
+    if motorThree[0] <= (motorThree[1] - MotorThree.PRECISION) or motorThree[0] >= (motorThree[1] + MotorThree.PRECISION):
+        MotorThree.MotorMove(motorThree)
+    else:
+        MotorThree.RUN = False
     time.sleep(1/Motor.CYCLESPERSECOND)
