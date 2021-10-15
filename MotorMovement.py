@@ -2,8 +2,8 @@ import time
 
 class Motor:
     CYCLESPERSECOND = 0 # Not needed, but fixes some syntax errors that were annoying
+    DEVMODE = True
 
-    RUN = True
     motor = []
 
     def __init__(self, precision, acceleration, maxSpeed, minSpeed):
@@ -15,7 +15,6 @@ class Motor:
     # Calculate the vector required to move thicc arm
     def MaxVelCalc(self, tarAngle, curAngle, curSpeed):
         if tarAngle > (curAngle - self.PRECISION) and tarAngle < (curAngle + self.PRECISION):
-            self.RUN = False
             print("ERROR")
             return 0
         else:
@@ -36,7 +35,6 @@ class Motor:
                 return -self.MINSPEED
             else:
                 print("MAJOR ERROR")
-                self.RUN = False
     # Set the speed
     def VelCalc(self, tarSpeed, curSpeed):
         difSpeed = (tarSpeed - curSpeed)
@@ -57,5 +55,7 @@ class Motor:
         motor[2] = self.MaxVelCalc(motor[0], motor[1], motor[3])
         motor[3] = self.VelCalc(motor[2], motor[3])
         motor = self.EncoderOut(motor[3], motor)
-        print(motor)
+        if (self.DEVMODE == True):
+            print(motor)
+        return motor
 

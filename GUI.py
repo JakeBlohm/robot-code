@@ -1,17 +1,15 @@
 import math
-
 from ArmPostioner import SEGMENT_ONE, SEGMENT_TWO
 
 def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle):
-    print(mOneCAngle, mTwoCAngle, mThreeCAngle)
     try:
-        curDistanceAngled = math.sqrt(((SEGMENT_ONE**2)+(SEGMENT_TWO**2))-(2*SEGMENT_ONE*SEGMENT_TWO*math.degrees(math.cos(180-mThreeCAngle))))
+        curDistanceAngled = math.sqrt(((SEGMENT_ONE**2)+(SEGMENT_TWO**2))-(2*SEGMENT_ONE*SEGMENT_TWO*math.cos(math.radians(180-mThreeCAngle))))
         AAngle = 90 - (mTwoCAngle+math.degrees(math.acos(((SEGMENT_ONE**2)+(curDistanceAngled**2)-(SEGMENT_TWO**2))/(2*SEGMENT_ONE*curDistanceAngled))))
-        curDistance = curDistanceAngled*math.degrees(math.cos(AAngle))
-        X = curDistance*math.degrees(math.cos(mOneCAngle))
-        Y = curDistance*math.degrees(math.sin(mOneCAngle))
-        Z = curDistanceAngled*math.degrees(math.sin(AAngle))
-        print(X, Y, Z)
+        curDistance = curDistanceAngled*math.cos(math.radians(AAngle))
+        Y = round(curDistance*math.cos(math.radians(mOneCAngle)),2)
+        X = round(curDistance*math.sin(math.radians(mOneCAngle)),2)
+        Z = round(curDistanceAngled*math.sin(math.radians(AAngle)),2)
+        print("X: {} Y: {} Z: {}".format(X, Y, Z))
         return X, Y, Z
     except:
         print("NOPE")
@@ -19,4 +17,4 @@ def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle):
 
 
 def GUIUpdate(allMCAngle):
-    X, Y, Z=getXY(allMCAngle[0], allMCAngle[1], allMCAngle[2])
+    getXY(allMCAngle[0], allMCAngle[1], allMCAngle[2])

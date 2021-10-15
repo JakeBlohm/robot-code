@@ -3,10 +3,15 @@ from GUI import GUIUpdate
 from MotorMovement import Motor
 from ArmPostioner import AllMotorCalc
 import time
+import os
+
+Clear = (lambda: os.system("cls"))
 
 #Main Settings
 Motor.CYCLESPERSECOND = 1000
 
+DEVMODE = True
+Motor.DEVMODE = DEVMODE
 #Motor settings - Precision/Acceleration/Max Speed/Min Speed
 MotorOne = Motor(0.01, 3, 300, 9)
 MotorTwo = Motor(0.01, 3, 300, 9)
@@ -15,7 +20,7 @@ MotorThree = Motor(0.01, 3, 300, 9)
 MotorOneRun, MotorTwoRun, MotorThreeRun = True, True, True
 # will be replaced by encoder and other code
 def Inputs():
-    curAngle = float(input("Current Angle: "))
+    curAngle = 0 #float(input("Current Angle: "))
     motor = [0, curAngle, 0, 0]
     return motor
 
@@ -28,9 +33,11 @@ def TEMP_Input():
 coords = TEMP_Input()
 motorOne = Inputs()
 motorTwo = Inputs()
-motorThree = Inputs()
+motorThree =  Inputs()
 
-while MotorOneRun ==  MotorTwoRun == MotorThreeRun == True:
+while ((MotorOneRun ==  MotorTwoRun == MotorThreeRun == False) == False):
+    if DEVMODE == False:
+        Clear()
     allMCAngle = [motorOne[1], motorTwo[1], motorThree[1]]
     GUIUpdate(allMCAngle)
     allMTAngle = AllMotorCalc(coords)
@@ -41,12 +48,20 @@ while MotorOneRun ==  MotorTwoRun == MotorThreeRun == True:
         MotorOne.MotorMove(motorOne)
     else:
         MotorOneRun = False
+        motorOne[3] = 0
     if motorTwo[0] <= (motorTwo[1] - MotorTwo.PRECISION) or motorTwo[0] >= (motorTwo[1] + MotorTwo.PRECISION):
         MotorTwo.MotorMove(motorTwo)
     else:
         MotorTwoRun = False
+        motorTwo[3] = 0
     if motorThree[0] <= (motorThree[1] - MotorThree.PRECISION) or motorThree[0] >= (motorThree[1] + MotorThree.PRECISION):
         MotorThree.MotorMove(motorThree)
     else:
         MotorThreeRun = False
+        motorThree[3] = 0
+    if (DEVMODE == False):
+        print("Motor One RPS: {}\nMotor Two RPS: {}\nMotor Three RPS: {}".format(motorOne[3], motorTwo[3], motorThree[3]))
+    else:
+        print(coords)
+        print("Motor One RPS: {}\nMotor Two RPS: {}\nMotor Three RPS: {}".format(motorOne[3], motorTwo[3], motorThree[3]))
     time.sleep(1/Motor.CYCLESPERSECOND)
