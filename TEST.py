@@ -1,8 +1,8 @@
-class Employee:
-    def __init__(self):
-        testVar1 = 1
+One = False
+Two = False
+Three = False
 
-emp1 = Employee()
-emp2 = Employee()
-
-print
+if One == Two == Three == False:
+    print("works")
+else:
+    print("NOPE")

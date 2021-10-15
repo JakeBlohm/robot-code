@@ -1,4 +1,5 @@
 
+from GUI import GUIUpdate
 from MotorMovement import Motor
 from ArmPostioner import AllMotorCalc
 import time
@@ -10,7 +11,8 @@ Motor.CYCLESPERSECOND = 1000
 MotorOne = Motor(0.01, 3, 300, 9)
 MotorTwo = Motor(0.01, 3, 300, 9)
 MotorThree = Motor(0.01, 3, 300, 9)
-Motor.RUN = True
+
+MotorOneRun, MotorTwoRun, MotorThreeRun = True, True, True
 # will be replaced by encoder and other code
 def Inputs():
     curAngle = float(input("Current Angle: "))
@@ -22,33 +24,29 @@ def TEMP_Input():
 	X = int(input("X"))
 	Z = int(input("Z"))
 	return [X, Y, Z]
+
 coords = TEMP_Input()
 motorOne = Inputs()
 motorTwo = Inputs()
 motorThree = Inputs()
 
-
-def run():
-    if MotorOne.RUN == False and MotorTwo.RUN == False and MotorThree.RUN == False:
-        return False
-    else:
-        return True 
-
-while run():
-    AllMTAngle = AllMotorCalc(coords)
-    motorOne[0] = AllMTAngle[0]
-    motorTwo[0] = AllMTAngle[1]
-    motorThree[0] = AllMTAngle[2]
+while MotorOneRun ==  MotorTwoRun == MotorThreeRun == True:
+    allMCAngle = [motorOne[1], motorTwo[1], motorThree[1]]
+    GUIUpdate(allMCAngle)
+    allMTAngle = AllMotorCalc(coords)
+    motorOne[0] = allMTAngle[0]
+    motorTwo[0] = allMTAngle[1]
+    motorThree[0] = allMTAngle[2]
     if motorOne[0] <= (motorOne[1] - MotorOne.PRECISION) or motorOne[0] >= (motorOne[1] + MotorOne.PRECISION):
         MotorOne.MotorMove(motorOne)
     else:
-        MotorOne.RUN = False
+        MotorOneRun = False
     if motorTwo[0] <= (motorTwo[1] - MotorTwo.PRECISION) or motorTwo[0] >= (motorTwo[1] + MotorTwo.PRECISION):
         MotorTwo.MotorMove(motorTwo)
     else:
-        MotorTwo.RUN = False
+        MotorTwoRun = False
     if motorThree[0] <= (motorThree[1] - MotorThree.PRECISION) or motorThree[0] >= (motorThree[1] + MotorThree.PRECISION):
         MotorThree.MotorMove(motorThree)
     else:
-        MotorThree.RUN = False
+        MotorThreeRun = False
     time.sleep(1/Motor.CYCLESPERSECOND)
