@@ -12,9 +12,11 @@ def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle):
         Y = curDistance*math.degrees(math.sin(mOneCAngle))
         Z = curDistanceAngled*math.degrees(math.sin(AAngle))
         print(X, Y, Z)
+        return X, Y, Z
     except:
         print("NOPE")
+        return 0, 0, 0
 
 
 def GUIUpdate(allMCAngle):
-    getXY(allMCAngle[0], allMCAngle[1], allMCAngle[2])
+    X, Y, Z=getXY(allMCAngle[0], allMCAngle[1], allMCAngle[2])
