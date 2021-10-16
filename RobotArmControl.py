@@ -26,9 +26,9 @@ def Inputs():
     return motor
 
 def TEMP_Input():
-	Y = int(input("Y"))
-	X = int(input("X"))
-	Z = int(input("Z"))
+	X = float(input("X"))
+	Y = float(input("Y"))
+	Z = float(input("Z"))
 	return [X, Y, Z]
 
 coords = TEMP_Input()
