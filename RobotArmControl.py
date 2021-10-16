@@ -68,4 +68,5 @@ while ((MotorOneRun ==  MotorTwoRun == MotorThreeRun == False) == False):
     else:
         print(coords)
         print("Motor One RPS: {}\nMotor Two RPS: {}\nMotor Three RPS: {}".format(motorOne[3], motorTwo[3], motorThree[3]))
+        print("Motor One Angle: {}\nMotor Two Angle: {}\nMotor Three Angle: {}".format(motorOne[1], motorTwo[1], motorThree[1]))
     time.sleep(1/Motor.CYCLESPERSECOND)
