@@ -52,16 +52,15 @@ def MotorOneCalc(X, Y):
         return HOME_MOTOR_ONE
     elif ALL_HORIZONTAL_OFFSET == 0 and X == 0 and Y < 0:
         return 180
-    mOneTAngle = ((math.degrees(math.acos(ALL_HORIZONTAL_OFFSET/(math.sqrt((X**2)+(Y**2))))))-(math.degrees(math.atan(Y/X))))
+    mOneTAngle = math.degrees(math.atan(Y/X))
     if X < 0:
         mOneTAngle -= 180
     return mOneTAngle
 
 def MotorTwoPlusThreeCalc(X, Y, Z):
-	tarDistance = (math.sqrt((Z**2)+((math.sqrt((X**2)+(Y**2)))**2)))
-	(90 - ((math.degrees(math.atan(Z/X)))+(math.degrees(math.acos(((SEGMENT_ONE**2)+(tarDistance**2)-(SEGMENT_TWO**2))/(2*SEGMENT_ONE*tarDistance))))))
-	mTwoTAngle = (90 - ((math.degrees(math.atan(Z/X)))+(math.degrees(math.acos(((SEGMENT_ONE**2)+(tarDistance**2)-(SEGMENT_TWO**2))/(2*SEGMENT_ONE*tarDistance))))))
-	mThreeTAngle = (180 - (math.degrees(math.acos(((SEGMENT_TWO**2)+(SEGMENT_ONE**2)-(tarDistance**2))/(2*SEGMENT_TWO*SEGMENT_ONE)))))
+	tarDistance = (math.sqrt((X**2)+(Y**2)+(Z**2)))
+	mThreeTAngle = (180-(math.degrees(math.acos(((SEGMENT_TWO**2)+(SEGMENT_ONE**2)-(tarDistance**2))/(2*SEGMENT_TWO*SEGMENT_ONE)))))
+	mTwoTAngle = math.degrees(math.asin(Z/tarDistance))+math.degrees(math.atan((SEGMENT_TWO*math.sin(math.radians(mThreeTAngle)))/(SEGMENT_ONE+SEGMENT_TWO*math.cos(math.radians(mThreeTAngle)))))
 	return [mTwoTAngle, mThreeTAngle]
 	
 
