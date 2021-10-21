@@ -59,8 +59,8 @@ def MotorOneCalc(X, Y):
 
 def MotorTwoPlusThreeCalc(X, Y, Z):
 	tarDistance = (math.sqrt((X**2)+(Y**2)+(Z**2)))
+	mTwoTAngle = (90 - ((math.degrees(math.asin(Z/tarDistance)))+(math.degrees(math.acos(((SEGMENT_ONE**2)+(tarDistance**2)-(SEGMENT_TWO**2))/(2*SEGMENT_ONE*tarDistance))))))
 	mThreeTAngle = (180-(math.degrees(math.acos(((SEGMENT_TWO**2)+(SEGMENT_ONE**2)-(tarDistance**2))/(2*SEGMENT_TWO*SEGMENT_ONE)))))
-	mTwoTAngle = math.degrees(math.asin(Z/tarDistance))+math.degrees(math.atan((SEGMENT_TWO*math.sin(math.radians(mThreeTAngle)))/(SEGMENT_ONE+SEGMENT_TWO*math.cos(math.radians(mThreeTAngle)))))
 	return [mTwoTAngle, mThreeTAngle]
 	
 

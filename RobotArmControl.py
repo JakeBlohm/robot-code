@@ -6,12 +6,12 @@ from Validation import CoordsValidation
 import time
 import os
 
-Clear = (lambda: os.system("cls"))
+Clear = (lambda: os.system("clear"))
 
 #Main Settings
 Motor.CYCLESPERSECOND = 1000
 
-DEVMODE = True
+DEVMODE = False
 Motor.DEVMODE = DEVMODE
 #Motor settings - Precision/Acceleration/Max Speed/Min Speed
 MotorOne = Motor(0.01, 3, 300, 9)
@@ -65,6 +65,7 @@ while ((MotorOneRun ==  MotorTwoRun == MotorThreeRun == False) == False):
         motorThree[3] = 0
     if (DEVMODE == False):
         print("Motor One RPS: {}\nMotor Two RPS: {}\nMotor Three RPS: {}".format(motorOne[3], motorTwo[3], motorThree[3]))
+        print("Motor One Angle: {}\nMotor Two Angle: {}\nMotor Three Angle: {}".format(motorOne[1], motorTwo[1], motorThree[1]))
     else:
         print(coords)
         print("Motor One RPS: {}\nMotor Two RPS: {}\nMotor Three RPS: {}".format(motorOne[3], motorTwo[3], motorThree[3]))
