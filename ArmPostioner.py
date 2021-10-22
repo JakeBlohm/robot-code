@@ -49,7 +49,7 @@ lastAngles = [0, 0, 0]
 
 def MotorOneCalc(X, Y):
     if (ALL_HORIZONTAL_OFFSET == 0 and X == 0 and Y > 0) or (X == 0 and Y == 0):
-        return HOME_MOTOR_ONE
+        return 0
     elif ALL_HORIZONTAL_OFFSET == 0 and X == 0 and Y < 0:
         return 180
     mOneTAngle = math.degrees(math.atan(Y/X))

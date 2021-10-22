@@ -3,8 +3,8 @@ from ArmPostioner import ALL_HORIZONTAL_OFFSET, SEGMENT_ONE, SEGMENT_TWO
 
 
 X = 10
-Y = 10
-Z = 10
+Y = 15
+Z = 0
 
 mOneTAngle = math.degrees(math.atan(Y/X))
 tarDistance = (math.sqrt((X**2)+(Y**2)+(Z**2)))

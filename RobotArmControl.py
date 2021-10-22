@@ -20,10 +20,6 @@ MotorThree = Motor(0.01, 3, 300, 9)
 
 MotorOneRun, MotorTwoRun, MotorThreeRun = True, True, True
 # will be replaced by encoder and other code
-def Inputs():
-    curAngle = 0 #float(input("Current Angle: "))
-    motor = [0, curAngle, 0, 0]
-    return motor
 
 def TEMP_Input():
 	X = float(input("X"))
@@ -32,9 +28,9 @@ def TEMP_Input():
 	return [X, Y, Z]
 
 coords = TEMP_Input()
-motorOne = Inputs()
-motorTwo = Inputs()
-motorThree =  Inputs()
+motorOne = [0, 0, 0, 0]
+motorTwo = [0, 0, 0, 0]
+motorThree =  [0, 90, 0, 0]
 
 #Main Loop
 
