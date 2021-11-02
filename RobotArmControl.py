@@ -22,12 +22,16 @@ MotorOneRun, MotorTwoRun, MotorThreeRun = True, True, True
 # will be replaced by encoder and other code
 
 def TEMP_Input():
-	X = float(input("X"))
-	Y = float(input("Y"))
-	Z = float(input("Z"))
-	return [X, Y, Z]
+    X = float(input("X"))
+    Y = float(input("Y"))
+    Z = float(input("Z"))
+    # Information for endeffector
+    endHAngle = float(input("Angle of Endeffector horizontal"))
+    endVAngle = float(input("Angle of Endeffector Vertical"))
+    gripAngle = 0 #float(input("Rotation of gripper"))
+    return [X, Y, Z], [endHAngle, endVAngle, gripAngle]
 
-coords = TEMP_Input()
+coords , endEffector= TEMP_Input()
 motorOne = [0, 0, 0, 0]
 motorTwo = [0, 0, 0, 0]
 motorThree =  [0, 90, 0, 0]
@@ -40,7 +44,7 @@ while ((MotorOneRun ==  MotorTwoRun == MotorThreeRun == False) == False):
     allMCAngle = [motorOne[1], motorTwo[1], motorThree[1]]
     GUIUpdate(allMCAngle)
     coords = CoordsValidation(coords)
-    allMTAngle = AllMotorCalc(coords)
+    allMTAngle = AllMotorCalc(coords, endEffector)
     motorOne[0] = allMTAngle[0]
     motorTwo[0] = allMTAngle[1]
     motorThree[0] = allMTAngle[2]
