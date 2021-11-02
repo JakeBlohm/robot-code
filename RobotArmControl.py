@@ -1,5 +1,5 @@
 
-from GUI import GUIUpdate
+from GUICalc import GUIUpdate
 from MotorMovement import Motor
 from ArmPostioner import AllMotorCalc
 from Validation import CoordsValidation
@@ -38,7 +38,8 @@ motorThree =  [0, 90, 0, 0]
 
 #Main Loop
 
-while ((MotorOneRun ==  MotorTwoRun == MotorThreeRun == False) == False):
+#while ((MotorOneRun ==  MotorTwoRun == MotorThreeRun == False) == False):
+def mainLoop(coords):
     if DEVMODE == False:
         Clear()
     allMCAngle = [motorOne[1], motorTwo[1], motorThree[1]]
