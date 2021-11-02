@@ -60,7 +60,7 @@ def MotorAngleCalc(X, Y, Z, XO, YO, ZO, EH, EV, GA):
 	mTwoTAngle = (90 - ((math.degrees(math.asin(Z/tarDistance)))+(math.degrees(math.acos(((SEGMENT_ONE**2)+(tarDistance**2)-(SEGMENT_TWO**2))/(2*SEGMENT_ONE*tarDistance))))))
 	mThreeTAngle = (180-(math.degrees(math.acos(((SEGMENT_TWO**2)+(SEGMENT_ONE**2)-(tarDistance**2))/(2*SEGMENT_TWO*SEGMENT_ONE)))))
 	mFourTAngle = (math.degrees(math.atan(YO/XO)))
-	mFiveTAngle = mOneTAngle + (math.degrees(math.acos(Y/END_EFFECTOR_OFFSET)))
+	mFiveTAngle = (math.degrees(math.acos(Y/END_EFFECTOR_OFFSET)))
 	mSixTAngle = GA
 	return mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle
 	
