@@ -1,5 +1,3 @@
-import time
-
 class Motor:
     CYCLESPERSECOND = 0 # Not needed, but fixes some syntax errors that were annoying
     DEVMODE = True
