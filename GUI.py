@@ -91,7 +91,7 @@ while ((MotorOneRun ==  MotorTwoRun == MotorThreeRun == False) == False):
 
     # Main stuff
 
-    coords, endEffector = [x, y, z], [0, 0, 0]
+    coords, endEffector = [x/SCALE, y/SCALE, z], [0, 0, 0]
 
     if DEVMODE == False:
         Clear()

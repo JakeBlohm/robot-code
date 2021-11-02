@@ -51,7 +51,7 @@ lastAngles = [0, 0, 0]
 def MotorAngleCalc(X, Y, Z, XO, YO, ZO, EH, EV, GA):
 	if (ALL_HORIZONTAL_OFFSET == 0 and X == 0 and Y > 0) or (X == 0 and Y == 0):
 		mOneTAngle = 0
-	elif ALL_HORIZONTAL_OFFSET == 0 and X == 0 and Y < 0:
+	else:#if ALL_HORIZONTAL_OFFSET == 0 and X == 0 and Y < 0:
 		mOneTAngle = 180
 		mOneTAngle = math.degrees(math.atan(Y/X))
 	if X < 0:
@@ -74,8 +74,8 @@ def AllMotorCalc(coords, endEffector):
 		Y = coords[1]# - (Temp*math.cos(math.radians(endEffector[0])))
 		Z = coords [2]# - (END_EFFECTOR_OFFSET*math.sin(math.radians(endEffector[1])))
 		XO, YO, ZO = coords[0] - X, coords[1] - Y, coords[2] - Z, 
-		mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle = MotorAngleCalc(X, Y, Z, XO, YO, ZO, endEffector[0], endEffector[1], endEffector[2])
-		allMTAngle = [mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle]
+		mOneTAngle, mTwoTAngle, mThreeTAngle = MotorAngleCalc(X, Y, Z, XO, YO, ZO, endEffector[0], endEffector[1], endEffector[2])
+		allMTAngle = [mOneTAngle, mTwoTAngle, mThreeTAngle]#, mFourTAngle, mFiveTAngle, mSixTAngle]
 		lastCoords = coords
 		lastAngles = allMTAngle
 		return allMTAngle
