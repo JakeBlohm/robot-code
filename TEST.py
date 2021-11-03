@@ -1,3 +1,7 @@
-from Test2 import *
+from math import e
 
-hi(HI)
+
+m = [1, 2, 3, 4, 5]
+q, w, e, r, t = m
+
+print(q)

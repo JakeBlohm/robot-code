@@ -51,10 +51,13 @@ class Motor:
 
 
     def MotorMove(self, motor):
-        motor[2] = self.MaxVelCalc(motor[0], motor[1], motor[3])
-        motor[3] = self.VelCalc(motor[2], motor[3])
-        motor = self.EncoderOut(motor[3], motor)
-        if (self.DEVMODE == True):
-            print(motor)
+        if motor[0] <= (motor[1] - self.PRECISION) or motor[0] >= (motor[1] + self.PRECISION):
+            motor[2] = self.MaxVelCalc(motor[0], motor[1], motor[3])
+            motor[3] = self.VelCalc(motor[2], motor[3])
+            motor = self.EncoderOut(motor[3], motor)
+            if (self.DEVMODE == True):
+                print(motor)
+        else:
+            motor[3] = 0
         return motor
 

@@ -44,7 +44,7 @@ MAX_ARM_LENGTH = (SEGMENT_ONE + SEGMENT_TWO + SEGMENT_THREE)
 # Memory
 
 lastCoords = [0, 0, 0]
-lastAngles = [0, 0, 0]
+lastAngles = [0, 0, 0, 0, 0, 0]
 
 #MotorOne position calculation, E is end effector, O is coords offset from segment 3
 
@@ -59,10 +59,10 @@ def MotorAngleCalc(X, Y, Z, XO, YO, ZO, EH, EV, GA):
 	tarDistance = (math.sqrt((X**2)+(Y**2)+(Z**2)))
 	mTwoTAngle = (90 - ((math.degrees(math.asin(Z/tarDistance)))+(math.degrees(math.acos(((SEGMENT_ONE**2)+(tarDistance**2)-(SEGMENT_TWO**2))/(2*SEGMENT_ONE*tarDistance))))))
 	mThreeTAngle = (180-(math.degrees(math.acos(((SEGMENT_TWO**2)+(SEGMENT_ONE**2)-(tarDistance**2))/(2*SEGMENT_TWO*SEGMENT_ONE)))))
-	#mFourTAngle = (math.degrees(math.atan(YO/XO)))
-	#mFiveTAngle = (math.degrees(math.acos(Y/END_EFFECTOR_OFFSET)))
-	#mSixTAngle = GA
-	return mOneTAngle, mTwoTAngle, mThreeTAngle#, mFourTAngle, mFiveTAngle, mSixTAngle
+	mFourTAngle = 0#(math.degrees(math.atan(YO/XO)))
+	mFiveTAngle = 0#(math.degrees(math.acos(Y/END_EFFECTOR_OFFSET)))
+	mSixTAngle = GA
+	return mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle
 	
 
 def AllMotorCalc(coords, endEffector):
@@ -74,8 +74,8 @@ def AllMotorCalc(coords, endEffector):
 		Y = coords[1]# - (Temp*math.cos(math.radians(endEffector[0])))
 		Z = coords [2]# - (END_EFFECTOR_OFFSET*math.sin(math.radians(endEffector[1])))
 		XO, YO, ZO = coords[0] - X, coords[1] - Y, coords[2] - Z, 
-		mOneTAngle, mTwoTAngle, mThreeTAngle = MotorAngleCalc(X, Y, Z, XO, YO, ZO, endEffector[0], endEffector[1], endEffector[2])
-		allMTAngle = [mOneTAngle, mTwoTAngle, mThreeTAngle]#, mFourTAngle, mFiveTAngle, mSixTAngle]
+		mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle = MotorAngleCalc(X, Y, Z, XO, YO, ZO, endEffector[0], endEffector[1], endEffector[2])
+		allMTAngle = [mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle]
 		lastCoords = coords
 		lastAngles = allMTAngle
 		return allMTAngle

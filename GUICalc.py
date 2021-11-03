@@ -9,12 +9,12 @@ def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle):
         X = round(curDistance*math.cos(math.radians(mOneCAngle)),2)
         Y = round(curDistance*math.sin(math.radians(mOneCAngle)),2)
         Z = round(curDistanceAngled*math.sin(math.radians(AAngle)),2)
-        print("Current X: {} Y: {} Z: {}".format(X, Y, Z))
-        print("Current AAngle: {} curDistance: {} curDistanceAngled: {}".format(AAngle,curDistance,curDistanceAngled))
-        return X, Y, Z
+
+        midDis= SEGMENT_ONE*math.cos(math.radians(mTwoCAngle))
+        midZ= SEGMENT_ONE*math.sin(math.radians(mTwoCAngle))
+        return X, Y, Z, curDistance, midDis, midZ
     except:
-        print("NOPE")
-        return 0, 0, 0
+        return 0, 0, 0, 0, 0, 0
 
 def GUIUpdate(allMCAngle):
     return getXY(allMCAngle[0], allMCAngle[1], allMCAngle[2])
