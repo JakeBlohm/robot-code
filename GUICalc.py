@@ -10,6 +10,7 @@ def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle):
         Y = round(curDistance*math.sin(math.radians(mOneCAngle)),2)
         Z = round(curDistanceAngled*math.sin(math.radians(AAngle)),2)
         print("Current X: {} Y: {} Z: {}".format(X, Y, Z))
+        print("Current AAngle: {} curDistance: {} curDistanceAngled: {}".format(AAngle,curDistance,curDistanceAngled))
         return X, Y, Z
     except:
         print("NOPE")

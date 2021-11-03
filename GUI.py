@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-import numpy as np
+import math
 import threading
 from RobotArmControl import *
 global coords
@@ -18,6 +18,7 @@ tooltipCat = None
 
 maxArmLength = 60
 radius = maxArmLength*SCALE
+halfRadius = radius/2
 
 layout = [
     [sg.Graph(canvas_size=(radius+1, radius+1), 
@@ -25,7 +26,13 @@ layout = [
             graph_top_right=(radius, radius), 
             background_color='white',
             enable_events = True, 
-            key='graph')#,
+            key='graph'),
+    sg.Graph(canvas_size=(halfRadius+1, halfRadius+1),
+            graph_bottom_left=(-SCALE-1, -SCALE-1),
+            graph_top_right=(halfRadius, halfRadius),
+            background_color='white',
+            #enable_events = True, 
+            key='_side_')
     #sg.Text("TEMP WRITING HELLO THERE\nTEST", key='_coordOutput_')
     ], 
     [sg.Text(tooltipCat, key='_coords_'),
@@ -34,6 +41,7 @@ layout = [
 
 window = sg.Window('Arm Position Visualizer', layout, finalize=True)  
 graph = window['graph']
+side = window['_side_']
 coordText = window['_coords_']
 
 graph.DrawCircle((0,0), radius, line_color='red') # 1
@@ -41,6 +49,12 @@ graph.DrawLine((-10000, 0), (10000,0)) # 2
 graph.DrawLine((0,-10000),(0,10000)) # 3
 graph.Widget.config(cursor='circle')
 
+side.DrawLine((-1000, 0), (1000, 0))
+side.DrawLine((0, -1000), (0, 1000))
+
+gripper = side.DrawCircle((1,50*SCALE), SCALE*0.75, fill_color='red', line_color='black')
+shoulder = side.DrawCircle((1,1), SCALE*0.75, fill_color='green', line_color='black')
+elbow = side.DrawCircle((1,20*SCALE/2), SCALE*0.75, fill_color='blue', line_color='black')
 
 for x in range(-60,60,10):
     xTScale = x*SCALE
@@ -57,15 +71,22 @@ target = graph.DrawCircle((0,0), 0, line_color='blue')
 
 def UpdateLoop():
     global current
+    global gripper
+    global elbow
+
     while True:
         allMCAngle = mainLoop(coords, endEffector)
         currentX, currentY, currentZ = GUIUpdate(allMCAngle)
-        print(currentX,currentY)
+        corCurX, corCurY, corCurZ = currentX*SCALE, currentY*SCALE, currentZ*SCALE
+        gripperPos = math.sqrt((corCurX**2)+(corCurY**2))
+
         graph.delete_figure(current)
-        current = graph.DrawCircle((currentX*SCALE,currentY*SCALE), SCALE*1.5, fill_color='red', line_color='black')
+        side.delete_figure(gripper)
+        side.delete_figure(elbow)
 
-
-        
+        current = graph.DrawCircle((corCurX,corCurY), SCALE*1.5, fill_color='red', line_color='black')
+        gripper = side.DrawCircle(((gripperPos/2)+1, corCurZ/2), SCALE*0.75, fill_color='red', line_color='black')
+        elbow = side.DrawCircle((1,20*SCALE/2), SCALE*0.75, fill_color='blue', line_color='black')
 
 def update(x, y):
     global target
@@ -77,14 +98,16 @@ Math.start()
 
 while True:
     event, values = window.read() 
+
     if event == sg.WIN_CLOSED:
         break
+
     x = values['graph'][0]
     y = values['graph'][1]
     z = int(values['_coordInput_'])
+
     coordinates = "{},{}".format(int(x/SCALE),int(y/SCALE))
     coords = [x/SCALE, y/SCALE, z]
-
     coordText.update('{}'.format(coordinates))
     
     update(x,y)
