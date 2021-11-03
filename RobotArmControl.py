@@ -1,8 +1,3 @@
-
-
-
-# OLD STUFF
-
 from GUICalc import GUIUpdate
 from MotorMovement import Motor
 from ArmPostioner import AllMotorCalc
@@ -25,29 +20,19 @@ MotorThree = Motor(0.01, 3, 300, 9)
 MotorOneRun, MotorTwoRun, MotorThreeRun = True, True, True
 # will be replaced by encoder and other code
 
-def TEMP_Input():
-    X = float(input("X"))
-    Y = float(input("Y"))
-    Z = float(input("Z"))
-    # Information for endeffector
-    endHAngle = float(input("Angle of Endeffector horizontal"))
-    endVAngle = float(input("Angle of Endeffector Vertical"))
-    gripAngle = 0 #float(input("Rotation of gripper"))
-    return [X, Y, Z], [endHAngle, endVAngle, gripAngle]
-
-coords , endEffector= TEMP_Input()
 motorOne = [0, 0, 0, 0]
 motorTwo = [0, 0, 0, 0]
 motorThree =  [0, 90, 0, 0]
 
+allMotors =[motorOne, motorTwo, motorThree]
+
 #Main Loop
 
 #while ((MotorOneRun ==  MotorTwoRun == MotorThreeRun == False) == False):
-def mainLoop(coords):
+def mainLoop(coords,endEffector):
     if DEVMODE == False:
         Clear()
-    allMCAngle = [motorOne[1], motorTwo[1], motorThree[1]]
-    GUIUpdate(allMCAngle)
+    print("Target  X: {} Y: {} Z: {}".format(round(coords[0],2), round(coords[1],2), round(coords[2],2)))
     coords = CoordsValidation(coords)
     allMTAngle = AllMotorCalc(coords, endEffector)
     motorOne[0] = allMTAngle[0]
@@ -68,6 +53,8 @@ def mainLoop(coords):
     else:
         MotorThreeRun = False
         motorThree[3] = 0
+    allMCAngle = [motorOne[1], motorTwo[1], motorThree[1]]
+    GUIUpdate(allMCAngle)
     if (DEVMODE == False):
         print("Motor One RPS: {}\nMotor Two RPS: {}\nMotor Three RPS: {}".format(motorOne[3], motorTwo[3], motorThree[3]))
         print("Motor One Angle: {}\nMotor Two Angle: {}\nMotor Three Angle: {}".format(motorOne[1], motorTwo[1], motorThree[1]))

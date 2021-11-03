@@ -1,7 +1,7 @@
 import math
 from ArmPostioner import MAX_ARM_LENGTH
 global lastCoords
-lastCoords = [0 ,0, 0]
+lastCoords = [0 ,40, 0]
 
 def CoordsValidation(coords):
     global lastCoords
