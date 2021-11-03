@@ -5,7 +5,9 @@ from Validation import CoordsValidation
 import time
 import os
 
-Clear = (lambda: os.system("clear"))
+global allMCAngle
+
+Clear = (lambda: os.system('cls'))
 
 #Main Settings
 Motor.CYCLESPERSECOND = 1000
@@ -30,6 +32,7 @@ allMotors =[motorOne, motorTwo, motorThree]
 
 #while ((MotorOneRun ==  MotorTwoRun == MotorThreeRun == False) == False):
 def mainLoop(coords,endEffector):
+    global allMCAngle
     if DEVMODE == False:
         Clear()
     print("Target  X: {} Y: {} Z: {}".format(round(coords[0],2), round(coords[1],2), round(coords[2],2)))
@@ -63,3 +66,4 @@ def mainLoop(coords,endEffector):
         print("Motor One RPS: {}\nMotor Two RPS: {}\nMotor Three RPS: {}".format(motorOne[3], motorTwo[3], motorThree[3]))
         print("Motor One Angle: {}\nMotor Two Angle: {}\nMotor Three Angle: {}".format(motorOne[1], motorTwo[1], motorThree[1]))
     time.sleep(1/Motor.CYCLESPERSECOND)
+    return allMCAngle

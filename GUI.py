@@ -5,6 +5,7 @@ from RobotArmControl import *
 global coords
 global endEffector
 
+
 SCALE = 9
 
 #temp
@@ -24,7 +25,9 @@ layout = [
             graph_top_right=(radius, radius), 
             background_color='white',
             enable_events = True, 
-            key='graph')], 
+            key='graph')#,
+    #sg.Text("TEMP WRITING HELLO THERE\nTEST", key='_coordOutput_')
+    ], 
     [sg.Text(tooltipCat, key='_coords_'),
     sg.Input(default_text="0", key='_coordInput_')]
             ]    
@@ -49,11 +52,19 @@ for y in range(-60,60,10):
     graph.DrawLine((-10, yTScale),(10, yTScale))
     graph.DrawText(y, (+20, yTScale+15), color='blue')
 
+current = graph.DrawCircle((0,0), 0, line_color='red')
 target = graph.DrawCircle((0,0), 0, line_color='blue')
 
 def UpdateLoop():
+    global current
     while True:
-        mainLoop(coords, endEffector)
+        allMCAngle = mainLoop(coords, endEffector)
+        currentX, currentY, currentZ = GUIUpdate(allMCAngle)
+        print(currentX,currentY)
+        graph.delete_figure(current)
+        current = graph.DrawCircle((currentX*SCALE,currentY*SCALE), SCALE*1.5, fill_color='red', line_color='black')
+
+
         
 
 def update(x, y):
@@ -73,7 +84,6 @@ while True:
     z = int(values['_coordInput_'])
     coordinates = "{},{}".format(int(x/SCALE),int(y/SCALE))
     coords = [x/SCALE, y/SCALE, z]
-    print("HELLO:{}".format(coords))
 
     coordText.update('{}'.format(coordinates))
     
