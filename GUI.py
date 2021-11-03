@@ -79,15 +79,15 @@ def UpdateLoop():
 
         endX, endY, endZ, endDis, midDis, midZ  = GUIUpdate(allMCAngle)
 
-        corEndX, corEndY, corEndZ = endX*SCALE, endY*SCALE, endZ*SCALE
+        corEndX, corEndY, corEndZ, corEndDis, corMidDis, corMidZ = endX*SCALE, endY*SCALE, endZ*SCALE, endDis*SCALE, midDis*SCALE, midZ*SCALE
 
         graph.delete_figure(current)
         side.delete_figure(gripper)
         side.delete_figure(elbow)
 
         current = graph.DrawCircle((corEndX,corEndY), SCALE*1.5, fill_color='red', line_color='black')
-        gripper = side.DrawCircle(((endDis/2)+1, corEndZ/2), SCALE*0.75, fill_color='red', line_color='black')
-        elbow = side.DrawCircle((midDis*SCALE,midZ*SCALE/2), SCALE*0.75, fill_color='blue', line_color='black')
+        gripper = side.DrawCircle((corEndDis/2, corEndZ/2), SCALE*0.75, fill_color='red', line_color='black')
+        elbow = side.DrawCircle((corMidZ/2,corMidDis/2), SCALE*0.75, fill_color='blue', line_color='black')
 
 def update(x, y):
     global target
