@@ -55,6 +55,8 @@ side.DrawLine((0, -1000), (0, 1000))
 gripper = side.DrawCircle((1,50*SCALE), SCALE*0.75, fill_color='red', line_color='black')
 shoulder = side.DrawCircle((1,1), SCALE*0.75, fill_color='green', line_color='black')
 elbow = side.DrawCircle((1,30*SCALE/2), SCALE*0.75, fill_color='blue', line_color='black')
+segmentOneS = side.DrawLine((0,0), (0,0))
+segmentTwoS = side.DrawLine((0,0), (0,0))
 
 for x in range(-60,60,10):
     xTScale = x*SCALE
@@ -69,10 +71,13 @@ for y in range(-60,60,10):
 current = graph.DrawCircle((0,0), 0, line_color='red')
 target = graph.DrawCircle((0,0), 0, line_color='blue')
 
+
 def UpdateLoop():
     global current
     global gripper
     global elbow
+    global segmentOneS
+    global segmentTwoS
 
     while True:
         allMCAngle = mainLoop(coords, endEffector)
@@ -84,6 +89,11 @@ def UpdateLoop():
         graph.delete_figure(current)
         side.delete_figure(gripper)
         side.delete_figure(elbow)
+        side.delete_figure(segmentOneS)
+        side.delete_figure(segmentTwoS)
+
+        segmentOneS = side.DrawLine((0,0), (corMidZ/2,corMidDis/2))
+        segmentTwoS = side.DrawLine((corMidZ/2,corMidDis/2), (corEndDis/2, corEndZ/2))
 
         current = graph.DrawCircle((corEndX,corEndY), SCALE*1.5, fill_color='red', line_color='black')
         gripper = side.DrawCircle((corEndDis/2, corEndZ/2), SCALE*0.75, fill_color='red', line_color='black')

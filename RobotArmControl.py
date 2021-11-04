@@ -1,3 +1,4 @@
+import sys
 from GUICalc import GUIUpdate
 from MotorMovement import Motor
 from ArmPostioner import AllMotorCalc
@@ -7,7 +8,13 @@ import os
 
 global allMCAngle
 
-Clear = (lambda: os.system('cls'))
+if sys.platform.startswith('darwin'):
+    Clear = (lambda: os.system('clear'))
+elif sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
+    Clear = (lambda: os.system('cls'))
+else:
+    Clear = (lambda: os.system('clear'))
+
 
 #Main Settings
 Motor.CYCLESPERSECOND = 1000
@@ -15,9 +22,9 @@ Motor.CYCLESPERSECOND = 1000
 DEVMODE = False
 Motor.DEVMODE = DEVMODE
 #Motor settings - Precision/Acceleration/Max Speed/Min Speed
-MotorOne = Motor(0.01, 3, 300, 9)
-MotorTwo = Motor(0.01, 3, 300, 9)
-MotorThree = Motor(0.01, 6, 300, 9)
+MotorOne = Motor(0.01, 6, 600, 9)
+MotorTwo = Motor(0.01, 2, 200, 9)
+MotorThree = Motor(0.01, 3, 300, 9)
 MotorFour = Motor(0.01, 3, 300, 9)
 MotorFive = Motor(0.01, 3, 300, 9)
 MotorSix = Motor(0.01, 3, 300, 9)
