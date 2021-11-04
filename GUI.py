@@ -28,7 +28,7 @@ layout = [
             enable_events = True, 
             key='graph'),
     sg.Graph(canvas_size=(halfRadius+1, halfRadius+1),
-            graph_bottom_left=(-SCALE-1, -SCALE-1),
+            graph_bottom_left=(-10*SCALE-1, -2*SCALE-1),
             graph_top_right=(halfRadius, halfRadius),
             background_color='white',
             #enable_events = True, 
@@ -52,9 +52,10 @@ graph.Widget.config(cursor='circle')
 side.DrawLine((-1000, 0), (1000, 0))
 side.DrawLine((0, -1000), (0, 1000))
 
-gripper = side.DrawCircle((1,50*SCALE), SCALE*0.75, fill_color='red', line_color='black')
-shoulder = side.DrawCircle((1,1), SCALE*0.75, fill_color='green', line_color='black')
-elbow = side.DrawCircle((1,30*SCALE/2), SCALE*0.75, fill_color='blue', line_color='black')
+wristS = side.DrawCircle((1,50*SCALE), SCALE*0.75, fill_color='red', line_color='black')
+shoulderS = side.DrawCircle((1,1), SCALE*0.75, fill_color='black', line_color='black')
+elbowS = side.DrawCircle((1,30*SCALE/2), SCALE*0.75, fill_color='black', line_color='black')
+
 segmentOneS = side.DrawLine((0,0), (0,0))
 segmentTwoS = side.DrawLine((0,0), (0,0))
 
@@ -68,36 +69,49 @@ for y in range(-60,60,10):
     graph.DrawLine((-10, yTScale),(10, yTScale))
     graph.DrawText(y, (+20, yTScale+15), color='blue')
 
-current = graph.DrawCircle((0,0), 0, line_color='red')
+wristG = graph.DrawCircle((0,0), 0, line_color='red')
 target = graph.DrawCircle((0,0), 0, line_color='blue')
+elbowG = graph.DrawCircle((1,30*SCALE/2), SCALE*0.75, fill_color='black', line_color='black')
 
+segmentOneG = graph.DrawLine((0,0), (0,0))
+segmentTwoG = graph.DrawLine((0,0), (0,0))
 
 def UpdateLoop():
-    global current
-    global gripper
-    global elbow
+    global wristG
+    global elbowG
+    global segmentOneG
+    global segmentTwoG
+    global wristS
+    global elbowS
     global segmentOneS
     global segmentTwoS
 
     while True:
         allMCAngle = mainLoop(coords, endEffector)
 
-        endX, endY, endZ, endDis, midDis, midZ  = GUIUpdate(allMCAngle)
+        endX, endY, endZ, endDis, midDis, midX, midY, midZ  = GUIUpdate(allMCAngle)
 
-        corEndX, corEndY, corEndZ, corEndDis, corMidDis, corMidZ = endX*SCALE, endY*SCALE, endZ*SCALE, endDis*SCALE, midDis*SCALE, midZ*SCALE
+        corEndX, corEndY, corEndZ, corEndDis, corMidDis, corMidX, corMidY, corMidZ = endX*SCALE, endY*SCALE, endZ*SCALE, endDis*SCALE, midDis*SCALE, midX*SCALE, midY*SCALE, midZ*SCALE
+        
+        graph.delete_figure(segmentOneG)
+        segmentOneG = graph.DrawLine((0,0), (corMidX,corMidY))
+        graph.delete_figure(segmentTwoG)
+        segmentTwoG = graph.DrawLine((corMidX,corMidY), (corEndX, corEndY))
 
-        graph.delete_figure(current)
-        side.delete_figure(gripper)
-        side.delete_figure(elbow)
+        graph.delete_figure(wristG)
+        wristG = graph.DrawCircle((corEndX, corEndY), SCALE*1.5, fill_color='red', line_color='black')
+        graph.delete_figure(elbowG)
+        elbowG = graph.DrawCircle((corMidX, corMidY), SCALE*1.5, fill_color='black', line_color='black')
+
         side.delete_figure(segmentOneS)
+        segmentOneS = side.DrawLine((0,0), (corMidDis/2,corMidZ/2))
         side.delete_figure(segmentTwoS)
+        segmentTwoS = side.DrawLine((corMidDis/2,corMidZ/2), (corEndDis/2, corEndZ/2))
 
-        segmentOneS = side.DrawLine((0,0), (corMidZ/2,corMidDis/2))
-        segmentTwoS = side.DrawLine((corMidZ/2,corMidDis/2), (corEndDis/2, corEndZ/2))
-
-        current = graph.DrawCircle((corEndX,corEndY), SCALE*1.5, fill_color='red', line_color='black')
-        gripper = side.DrawCircle((corEndDis/2, corEndZ/2), SCALE*0.75, fill_color='red', line_color='black')
-        elbow = side.DrawCircle((corMidZ/2,corMidDis/2), SCALE*0.75, fill_color='blue', line_color='black')
+        side.delete_figure(wristS)
+        wristS = side.DrawCircle((corEndDis/2, corEndZ/2), SCALE*0.75, fill_color='red', line_color='black')
+        side.delete_figure(elbowS)
+        elbowS = side.DrawCircle((corMidDis/2, corMidZ/2), SCALE*0.75, fill_color='black', line_color='black')
 
 def update(x, y):
     global target

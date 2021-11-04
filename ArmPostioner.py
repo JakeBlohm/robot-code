@@ -49,13 +49,12 @@ lastAngles = [0, 0, 0, 0, 0, 0]
 #MotorOne position calculation, E is end effector, O is coords offset from segment 3
 
 def MotorAngleCalc(X, Y, Z, XO, YO, ZO, EH, EV, GA):
-	if (ALL_HORIZONTAL_OFFSET == 0 and X == 0 and Y > 0) or (X == 0 and Y == 0):
-		mOneTAngle = 0
-	else:#if ALL_HORIZONTAL_OFFSET == 0 and X == 0 and Y < 0:
-		mOneTAngle = 180
-		mOneTAngle = math.degrees(math.atan(Y/X))
+	
+	mOneTAngle = math.degrees(math.atan(X/Y))
+
 	if X < 0:
 		mOneTAngle -= 180
+
 	tarDistance = (math.sqrt((X**2)+(Y**2)+(Z**2)))
 	mTwoTAngle = (90 - ((math.degrees(math.asin(Z/tarDistance)))+(math.degrees(math.acos(((SEGMENT_ONE**2)+(tarDistance**2)-(SEGMENT_TWO**2))/(2*SEGMENT_ONE*tarDistance))))))
 	mThreeTAngle = (180-(math.degrees(math.acos(((SEGMENT_TWO**2)+(SEGMENT_ONE**2)-(tarDistance**2))/(2*SEGMENT_TWO*SEGMENT_ONE)))))
