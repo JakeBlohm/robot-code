@@ -60,12 +60,14 @@ graph.Widget.config(cursor='circle')
 side.DrawLine((-1000, 0), (1000, 0))
 side.DrawLine((0, -1000), (0, 1000))
 
-wristS = side.DrawCircle((1,50*SCALE), SCALE*0.75, fill_color='red', line_color='black')
+wristS = side.DrawCircle((1,1), SCALE*0.75, fill_color='red', line_color='black')
 shoulderS = side.DrawCircle((1,1), SCALE*0.75, fill_color='black', line_color='black')
-elbowS = side.DrawCircle((1,30*SCALE/2), SCALE*0.75, fill_color='black', line_color='black')
+elbowS = side.DrawCircle((1,1), SCALE*0.75, fill_color='black', line_color='black')
+gripperS = side.DrawCircle((1,1), SCALE*0.75, fill_color='green', line_color='black')
 
 segmentOneS = side.DrawLine((0,0), (0,0))
 segmentTwoS = side.DrawLine((0,0), (0,0))
+segmentThreeS = side.DrawLine((0,0),(0,0))
 
 def segOneVis():
     cirVis = side.DrawCircle((1,1),30*SCALE/2,line_color='red')
@@ -85,32 +87,41 @@ for y in range(-60,60,10):
 
 wristG = graph.DrawCircle((0,0), 0, line_color='red')
 target = graph.DrawCircle((0,0), 0, line_color='blue')
-elbowG = graph.DrawCircle((1,30*SCALE/2), SCALE*0.75, fill_color='black', line_color='black')
+elbowG = graph.DrawCircle((0,0), 0, fill_color='black', line_color='black')
+gripperG = graph.DrawCircle((0,0), 0, fill_color='green', line_color='black')
 
 segmentOneG = graph.DrawLine((0,0), (0,0))
 segmentTwoG = graph.DrawLine((0,0), (0,0))
+segmentThreeG = graph.DrawLine((0,0),(0,0))
+
 
 def UpdateLoop():
     global wristG
     global elbowG
     global segmentOneG
     global segmentTwoG
+    global segmentThreeG
+    global gripperG
     global wristS
     global elbowS
+    global gripperS
     global segmentOneS
     global segmentTwoS
+    global segmentThreeS
 
     while True:
         allMCAngle = mainLoop(coords, endEffector)
 
-        endX, endY, endZ, endDis, midDis, midX, midY, midZ  = GUIUpdate(allMCAngle)
+        endX, endY, endZ, endDis, midDis, midX, midY, midZ, griX, griY, griZ, griDis  = GUIUpdate(allMCAngle)
 
-        corEndX, corEndY, corEndZ, corEndDis, corMidDis, corMidX, corMidY, corMidZ = endX*SCALE, endY*SCALE, endZ*SCALE, endDis*SCALE, midDis*SCALE, midX*SCALE, midY*SCALE, midZ*SCALE
+        corEndX, corEndY, corEndZ, corEndDis, corMidDis, corMidX, corMidY, corMidZ, corGriX, corGriY, corGriZ, corGriDis = endX*SCALE, endY*SCALE, endZ*SCALE, endDis*SCALE, midDis*SCALE, midX*SCALE, midY*SCALE, midZ*SCALE, griX*SCALE, griY*SCALE, griZ*SCALE, griDis*SCALE
         
         graph.delete_figure(segmentOneG)
         segmentOneG = graph.DrawLine((0,0), (corMidX,corMidY))
         graph.delete_figure(segmentTwoG)
         segmentTwoG = graph.DrawLine((corMidX,corMidY), (corEndX, corEndY))
+        graph.delete_figure(segmentThreeG)
+        segmentThreeG = graph.DrawLine((corEndX,corEndY), (corGriX, corGriY))
 
         graph.delete_figure(wristG)
         wristG = graph.DrawCircle((corEndX, corEndY), SCALE*1.5, fill_color='red', line_color='black')
@@ -121,6 +132,8 @@ def UpdateLoop():
         segmentOneS = side.DrawLine((0,0), (corMidDis/2,corMidZ/2))
         side.delete_figure(segmentTwoS)
         segmentTwoS = side.DrawLine((corMidDis/2,corMidZ/2), (corEndDis/2, corEndZ/2))
+        side.delete_figure(segmentThreeS)
+        segmentThreeS = side.DrawLine((corEndDis/2,corEndZ/2), (corGriDis/2, corGriZ/2))
 
         side.delete_figure(wristS)
         wristS = side.DrawCircle((corEndDis/2, corEndZ/2), SCALE*0.75, fill_color='red', line_color='black')
@@ -152,7 +165,5 @@ while True:
     coordText.update('{}'.format(coordinates))
     
     update(x,y)
-
-
 
 window.close()
