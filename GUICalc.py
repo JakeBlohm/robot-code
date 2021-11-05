@@ -28,4 +28,4 @@ def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle, mFourCAngle, mFiveCAngle, mSixCA
         return 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
 def GUIUpdate(allMCAngle):
-    return getXY(allMCAngle[0], allMCAngle[1], allMCAngle[2], allMCAngle[3], allMCAngle[4])
+    return getXY(allMCAngle[0], allMCAngle[1], allMCAngle[2], allMCAngle[3], allMCAngle[4], allMCAngle[5])

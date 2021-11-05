@@ -86,6 +86,7 @@ def MotorAngleCalc(X, Y, Z, XO, YO, ZO, EH, EV, GA):
 		lastAngles = [mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle]
 		return [mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle]
 	except:
+		print("Nah u Math Bad")
 		return lastAngles
 	
 

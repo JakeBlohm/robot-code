@@ -60,7 +60,7 @@ def mainLoop(coords,endEffector):
    
     allMCAngle = [motorOne[1], motorTwo[1], motorThree[1], motorFour[1], motorFive[1], motorSix[1]]
 
-    CX, CY, CZ, t, t, t, t, t = GUIUpdate(allMCAngle)
+    CX, CY, CZ, t, t, t, t, t, t, t, t, t= GUIUpdate(allMCAngle)
 
     if DEVMODE == False:
         Clear()
