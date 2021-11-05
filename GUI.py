@@ -22,6 +22,11 @@ halfRadius = radius/2
 
 menu = [["File", ["Settings","Exit"]]]
 
+sGBLx = -10*SCALE-1
+sGBLy = -2*SCALE-1
+sGCanSizeX = halfRadius+1+-sGBLx
+sGCanSizeY = halfRadius+1+-sGBLy
+
 layout = [
     [sg.Menu(menu)],
     [sg.Graph(canvas_size=(radius+1, radius+1), 
@@ -30,8 +35,8 @@ layout = [
             background_color='white',
             enable_events = True, 
             key='graph'),
-    sg.Graph(canvas_size=(halfRadius+1, halfRadius+1),
-            graph_bottom_left=(-10*SCALE-1, -2*SCALE-1),
+    sg.Graph(canvas_size=(sGCanSizeX, sGCanSizeY),
+            graph_bottom_left=(sGBLx, sGBLy),
             graph_top_right=(halfRadius, halfRadius),
             background_color='white',
             #enable_events = True, 
@@ -61,6 +66,12 @@ elbowS = side.DrawCircle((1,30*SCALE/2), SCALE*0.75, fill_color='black', line_co
 
 segmentOneS = side.DrawLine((0,0), (0,0))
 segmentTwoS = side.DrawLine((0,0), (0,0))
+
+def segOneVis():
+    cirVis = side.DrawCircle((1,1),30*SCALE/2,line_color='red')
+    cirVis2 = side.DrawCircle((1,30*SCALE/2), SCALE*0.75, fill_color='red', line_color='black')
+
+#segOneVis()
 
 for x in range(-60,60,10):
     xTScale = x*SCALE
