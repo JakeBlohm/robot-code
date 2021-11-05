@@ -20,7 +20,10 @@ maxArmLength = 60
 radius = maxArmLength*SCALE
 halfRadius = radius/2
 
+menu = [["File", ["Settings","Exit"]]]
+
 layout = [
+    [sg.Menu(menu)],
     [sg.Graph(canvas_size=(radius+1, radius+1), 
             graph_bottom_left=(-radius, -radius), 
             graph_top_right=(radius, radius), 
@@ -124,8 +127,10 @@ Math.start()
 while True:
     event, values = window.read() 
 
-    if event == sg.WIN_CLOSED:
+    if event == sg.WIN_CLOSED or event == 'Exit':
         break
+    elif event == 'Settings':
+        pass
 
     x = values['graph'][0]
     y = values['graph'][1]
