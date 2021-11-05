@@ -69,6 +69,12 @@ def mOneCalc(X,Y):
 		MO = 0
 	return MO
 
+def endMotors(XO, YO, ZO, GA):
+	mFourTAngle = 0(math.degrees(math.atan(XO/YO)))
+	mFiveTAngle = 0(math.degrees(math.acos(YO/END_EFFECTOR_OFFSET)))
+	mSixTAngle = GA
+	return mFourTAngle, mFiveTAngle, mSixTAngle
+
 def MotorAngleCalc(X, Y, Z, XO, YO, ZO, EH, EV, GA):
 	global lastAngles
 	mOneTAngle = mOneCalc(X,Y)
@@ -76,9 +82,7 @@ def MotorAngleCalc(X, Y, Z, XO, YO, ZO, EH, EV, GA):
 		tarDistance = (math.sqrt((X**2)+(Y**2)+(Z**2)))
 		mTwoTAngle = (90 - ((math.degrees(math.asin(Z/tarDistance)))+(math.degrees(math.acos(((SEGMENT_ONE**2)+(tarDistance**2)-(SEGMENT_TWO**2))/(2*SEGMENT_ONE*tarDistance))))))
 		mThreeTAngle = (180-(math.degrees(math.acos(((SEGMENT_TWO**2)+(SEGMENT_ONE**2)-(tarDistance**2))/(2*SEGMENT_TWO*SEGMENT_ONE)))))
-		mFourTAngle = 0#(math.degrees(math.atan(YO/XO)))
-		mFiveTAngle = 0#(math.degrees(math.acos(Y/END_EFFECTOR_OFFSET)))
-		mSixTAngle = GA
+		mFourTAngle, mFiveTAngle, mSixTAngle = endMotors(XO, YO, ZO, GA)
 		lastAngles = [mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle]
 		return [mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle]
 	except:
@@ -90,9 +94,9 @@ def AllMotorCalc(coords, endEffector):
 	global lastAngles
 	if coords != lastCoords:
 		Temp = (END_EFFECTOR_OFFSET*math.cos(math.radians(endEffector[1])))
-		X = coords[0]# - (Temp*math.sin(math.radians(endEffector[0])))
-		Y = coords[1]# - (Temp*math.cos(math.radians(endEffector[0])))
-		Z = coords [2]# - (END_EFFECTOR_OFFSET*math.sin(math.radians(endEffector[1])))
+		X = coords[0] - (Temp*math.sin(math.radians(endEffector[0])))
+		Y = coords[1] - (Temp*math.cos(math.radians(endEffector[0])))
+		Z = coords [2] - (END_EFFECTOR_OFFSET*math.sin(math.radians(endEffector[1])))
 		XO, YO, ZO = coords[0] - X, coords[1] - Y, coords[2] - Z, 
 		allMTAngle = MotorAngleCalc(X, Y, Z, XO, YO, ZO, endEffector[0], endEffector[1], endEffector[2])
 		lastCoords = coords

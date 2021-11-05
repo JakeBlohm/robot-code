@@ -13,11 +13,15 @@ def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle):
         midDis= SEGMENT_ONE*math.sin(math.radians(mTwoCAngle))
         midX = midDis*math.sin(math.radians(mOneCAngle))
         midY = midDis*math.cos(math.radians(mOneCAngle))
-        midZ= SEGMENT_ONE*math.cos(math.radians(mTwoCAngle))
-        print (midZ)
-        return X, Y, Z, curDistance, midDis, midX, midY, midZ
+        midZ = SEGMENT_ONE*math.cos(math.radians(mTwoCAngle))
+        
+        griDis =
+        griX = 
+        griY =
+        griZ = 
+        return X, Y, Z, curDistance, midDis, midX, midY, midZ, griX, griY, griZ, griDis
     except:
-        return 0, 0, 0, 0, 0, 0, 0, 0
+        return 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
 def GUIUpdate(allMCAngle):
-    return getXY(allMCAngle[0], allMCAngle[1], allMCAngle[2])
+    return getXY(allMCAngle[0], allMCAngle[1], allMCAngle[2], allMCAngle[3], allMCAngle[4])
