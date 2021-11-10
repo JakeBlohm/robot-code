@@ -13,7 +13,6 @@ SCALE = 9
 endEffector = [0, 0, 0]
 coords = [0, 0, 0]
 
-
 tooltipCat = None
 
 maxArmLength = 60
@@ -44,7 +43,10 @@ layout = [
     #sg.Text("TEMP WRITING HELLO THERE\nTEST", key='_coordOutput_')
     ], 
     [sg.Text(tooltipCat, key='_coords_'),
-    sg.Input(default_text="0", key='_coordInput_')]
+    sg.Input(default_text="0", key='_coordInput_'),
+    sg.Input(default_text='0', key='_endEffHori_'),
+    sg.Input(default_text='0', key='_endEffVert_'),
+    sg.Input(default_text='0', key='_gripperRotation_')]
             ]    
 
 window = sg.Window('Arm Position Visualizer', layout, finalize=True)  
@@ -123,6 +125,8 @@ def UpdateLoop():
         graph.delete_figure(segmentThreeG)
         segmentThreeG = graph.DrawLine((corEndX,corEndY), (corGriX, corGriY))
 
+        graph.delete_figure(gripperG)
+        gripperG = graph.DrawCircle((corGriX, corGriY), SCALE*1.5, fill_color='green', line_color='black')
         graph.delete_figure(wristG)
         wristG = graph.DrawCircle((corEndX, corEndY), SCALE*1.5, fill_color='red', line_color='black')
         graph.delete_figure(elbowG)
@@ -135,6 +139,8 @@ def UpdateLoop():
         side.delete_figure(segmentThreeS)
         segmentThreeS = side.DrawLine((corEndDis/2,corEndZ/2), (corGriDis/2, corGriZ/2))
 
+        side.delete_figure(gripperS)
+        gripperS = side.DrawCircle((corGriDis/2, corGriZ/2), SCALE*0.75, fill_color='green', line_color='black')
         side.delete_figure(wristS)
         wristS = side.DrawCircle((corEndDis/2, corEndZ/2), SCALE*0.75, fill_color='red', line_color='black')
         side.delete_figure(elbowS)
@@ -162,6 +168,7 @@ while True:
 
     coordinates = "{},{}".format(int(x/SCALE),int(y/SCALE))
     coords = [x/SCALE, y/SCALE, z]
+    endEffector = [int(values['_endEffHori_']),int(values['_endEffVert_']),int(values['_gripperRotation_'])]
     coordText.update('{}'.format(coordinates))
     
     update(x,y)

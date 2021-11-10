@@ -17,17 +17,17 @@ else:
 
 
 #Main Settings
-Motor.CYCLESPERSECOND = 1000
+Motor.CYCLESPERSECOND = 100
 
 DEVMODE = False
 Motor.DEVMODE = DEVMODE
 #Motor settings - Precision/Acceleration/Max Speed/Min Speed
-MotorOne = Motor(0.01, 6, 600, 9)
-MotorTwo = Motor(0.01, 2, 200, 9)
-MotorThree = Motor(0.01, 3, 300, 9)
-MotorFour = Motor(0.01, 3, 300, 9)
-MotorFive = Motor(0.01, 3, 300, 9)
-MotorSix = Motor(0.01, 3, 300, 9)
+MotorOne = Motor(0.1, 6, 600, 9)
+MotorTwo = Motor(0.1, 2, 200, 9)
+MotorThree = Motor(0.1, 3, 300, 9)
+MotorFour = Motor(0.1, 3, 300, 9)
+MotorFive = Motor(0.1, 3, 300, 9)
+MotorSix = Motor(0.1, 3, 300, 9)
 
 # will be replaced by encoder and other code
 

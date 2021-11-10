@@ -69,20 +69,21 @@ def mOneCalc(X,Y):
 		MO = 0
 	return MO
 
-def endMotors(XO, YO, ZO, GA):
-	mFourTAngle = 0(math.degrees(math.atan(XO/YO)))
-	mFiveTAngle = 0(math.degrees(math.acos(YO/END_EFFECTOR_OFFSET)))
-	mSixTAngle = GA
+def endMotors(XO, YO, ZO, GR):
+	mFourTAngle = mOneCalc(XO,YO)
+	mFiveTAngle = math.degrees(math.asin(ZO/END_EFFECTOR_OFFSET))
+	mSixTAngle = GR - mFourTAngle
 	return mFourTAngle, mFiveTAngle, mSixTAngle
 
-def MotorAngleCalc(X, Y, Z, XO, YO, ZO, EH, EV, GA):
+def MotorAngleCalc(X, Y, Z, XO, YO, ZO, EH, EV, GR):
 	global lastAngles
 	mOneTAngle = mOneCalc(X,Y)
 	try:
 		tarDistance = (math.sqrt((X**2)+(Y**2)+(Z**2)))
 		mTwoTAngle = (90 - ((math.degrees(math.asin(Z/tarDistance)))+(math.degrees(math.acos(((SEGMENT_ONE**2)+(tarDistance**2)-(SEGMENT_TWO**2))/(2*SEGMENT_ONE*tarDistance))))))
 		mThreeTAngle = (180-(math.degrees(math.acos(((SEGMENT_TWO**2)+(SEGMENT_ONE**2)-(tarDistance**2))/(2*SEGMENT_TWO*SEGMENT_ONE)))))
-		mFourTAngle, mFiveTAngle, mSixTAngle = endMotors(XO, YO, ZO, GA)
+		mFourTAngle, mFiveTAngle, mSixTAngle = endMotors(XO, YO, ZO, GR)
+		mFourTAngle += mOneTAngle
 		lastAngles = [mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle]
 		return [mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle]
 	except:
@@ -95,10 +96,17 @@ def AllMotorCalc(coords, endEffector):
 	global lastAngles
 	if coords != lastCoords:
 		Temp = (END_EFFECTOR_OFFSET*math.cos(math.radians(endEffector[1])))
+		if endEffector[0] < 0:
+			Temp = -Temp
+		print(endEffector)
 		X = coords[0] - (Temp*math.sin(math.radians(endEffector[0])))
 		Y = coords[1] - (Temp*math.cos(math.radians(endEffector[0])))
-		Z = coords [2] - (END_EFFECTOR_OFFSET*math.sin(math.radians(endEffector[1])))
-		XO, YO, ZO = coords[0] - X, coords[1] - Y, coords[2] - Z, 
+		Z = coords[2] - (END_EFFECTOR_OFFSET*math.sin(math.radians(endEffector[1])))
+		print("THIS ONE WHY IS IT NOT SHOWING")
+		print(coords)
+		print(X,Y,Z)
+		XO, YO, ZO = coords[0] - X, coords[1] - Y, coords[2] - Z 
+		print(XO, YO, ZO)
 		allMTAngle = MotorAngleCalc(X, Y, Z, XO, YO, ZO, endEffector[0], endEffector[1], endEffector[2])
 		lastCoords = coords
 		return allMTAngle
