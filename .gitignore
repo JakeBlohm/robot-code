@@ -1,7 +1,7 @@
 __pycache__/
-*.pyc
 __pycache__/Validation.cpython-39.pyc
 __pycache__/RobotArmControl.cpython-39.pyc
 __pycache__/MotorMovement.cpython-39.pyc
 __pycache__/GUICalc.cpython-39.pyc
 __pycache__/ArmPostioner.cpython-39.pyc
+*.pyc
