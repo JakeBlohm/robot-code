@@ -48,36 +48,36 @@ lastAngles = [0, 0, 0, 0, 0, 0]
 
 #MotorOne position calculation, E is end effector, O is coords offset from segment 3
 
-def mOneCalc(X,Y):
+def mRotCalc(X,Y):
 	if Y != 0:
 		if X == 0 and Y < 0:
-			MO = 180
+			m = 180
 		elif X== 0 and Y > 0:
-			MO = 0
+			m = 0
 		else:
-			MO = (math.degrees(math.atan(X/Y)))
+			m  = (math.degrees(math.atan(X/Y)))
 
 		if Y < 0 and X > 0:
-			MO += 180
+			m += 180
 		elif Y < 0 and X < 0:
-    			MO -= 180
+    			m -= 180
 	elif X < 0:
-		MO = -90
+		m = -90
 	elif X > 0:
-		MO = 90
+		m = 90
 	else:
-		MO = 0
-	return MO
+		m = 0
+	return m
 
 def endMotors(XO, YO, ZO, GR):
-	mFourTAngle = mOneCalc(XO,YO)
+	mFourTAngle = mRotCalc((math.sqrt((XO**2)+(YO**2))),ZO)
 	mFiveTAngle = math.degrees(math.asin(ZO/END_EFFECTOR_OFFSET))
 	mSixTAngle = GR - mFourTAngle
 	return mFourTAngle, mFiveTAngle, mSixTAngle
 
 def MotorAngleCalc(X, Y, Z, XO, YO, ZO, EH, EV, GR):
 	global lastAngles
-	mOneTAngle = mOneCalc(X,Y)
+	mOneTAngle = mRotCalc(X,Y)
 	try:
 		tarDistance = (math.sqrt((X**2)+(Y**2)+(Z**2)))
 		mTwoTAngle = (90 - ((math.degrees(math.asin(Z/tarDistance)))+(math.degrees(math.acos(((SEGMENT_ONE**2)+(tarDistance**2)-(SEGMENT_TWO**2))/(2*SEGMENT_ONE*tarDistance))))))
