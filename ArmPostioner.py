@@ -69,12 +69,16 @@ def mRotCalc(X,Y):
 		m = 0
 	return m
 
-def endMotors(XO, YO, ZO, GR):
-	if round(ZO,0) != 0:
-		mFourTAngle = mRotCalc(XO,ZO)
+def endMotors(xT, yT, zO, GR, mOneTAngle):
+	h = math.sqrt((xT**2)+(yT**2))
+	b = math.atan(xT/yT)
+	xO = h*math.sin(math.radians(mOneTAngle) - b)
+	yO = h*math.cos(math.radians(mOneTAngle) - b)
+	if round(zO,0) != 0:
+		mFourTAngle = mRotCalc(xO,zO)
 	else:
    		mFourTAngle = 0
-	mFiveTAngle = math.degrees(math.asin((math.sqrt((XO**2)+(ZO**2)))/END_EFFECTOR_OFFSET))
+	mFiveTAngle = math.degrees(math.asin((math.sqrt((xO**2)+(zO**2)))/END_EFFECTOR_OFFSET))
 	mSixTAngle = GR - mFourTAngle
 	return mFourTAngle, mFiveTAngle, mSixTAngle
 
@@ -85,7 +89,7 @@ def MotorAngleCalc(X, Y, Z, XO, YO, ZO, EH, EV, GR):
 		tarDistance = (math.sqrt((X**2)+(Y**2)+(Z**2)))
 		mTwoTAngle = (90 - ((math.degrees(math.asin(Z/tarDistance)))+(math.degrees(math.acos(((SEGMENT_ONE**2)+(tarDistance**2)-(SEGMENT_TWO**2))/(2*SEGMENT_ONE*tarDistance))))))
 		mThreeTAngle = (180-(math.degrees(math.acos(((SEGMENT_TWO**2)+(SEGMENT_ONE**2)-(tarDistance**2))/(2*SEGMENT_TWO*SEGMENT_ONE)))))
-		mFourTAngle, mFiveTAngle, mSixTAngle = endMotors(XO, YO, ZO, GR)
+		mFourTAngle, mFiveTAngle, mSixTAngle = endMotors(XO, YO, ZO, GR, mOneTAngle)
 		lastAngles = [mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle]
 		return [mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle]
 	except:
