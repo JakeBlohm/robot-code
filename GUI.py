@@ -112,7 +112,10 @@ def UpdateLoop():
     global segmentThreeS
 
     while True:
-        allMCAngle = mainLoop(coords, endEffector)
+        allMInfo = mainLoop(coords, endEffector)
+        
+        for i in range(6):
+	        allMCAngle[i] = allMInfo[i][1]
 
         endX, endY, endZ, endDis, midDis, midX, midY, midZ, griX, griY, griZ, griDis  = GUIUpdate(allMCAngle)
 

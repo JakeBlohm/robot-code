@@ -57,7 +57,8 @@ def mainLoop(coords,endEffector):
     MotorFour.MotorMove(motorFour)
     MotorFive.MotorMove(motorFive)
     MotorSix.MotorMove(motorSix)
-   
+
+    allMInfo = [motorOne, motorTwo, motorThree, motorFour, motorFive, motorSix]
     allMCAngle = [motorOne[1], motorTwo[1], motorThree[1], motorFour[1], motorFive[1], motorSix[1]]
 
     CX, CY, CZ, t, t, t, t, t, t, t, t, t= GUIUpdate(allMCAngle)
@@ -71,4 +72,4 @@ def mainLoop(coords,endEffector):
     
     time.sleep(1/Motor.CYCLESPERSECOND)
     
-    return allMCAngle
+    return allMInfo
