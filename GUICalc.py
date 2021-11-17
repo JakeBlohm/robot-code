@@ -21,8 +21,8 @@ def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle, mFourCAngle, mFiveCAngle, mSixCA
         griYF = SEGMENT_THREE*math.cos(math.radians(mFiveCAngle))
         h = math.sqrt((griXF**2)+(griYF**2))
         b = math.atan(griXF/griYF)
-        griX = h*math.sin(math.radians(mOneCAngle) - b)
-        griY = h*math.cos(math.radians(mOneCAngle) - b)
+        griX = h*math.sin(math.radians(mOneCAngle) - b) + X
+        griY = h*math.cos(math.radians(mOneCAngle) - b) + Y
         griZ = tempDis*math.sin(math.radians(mFourCAngle)) + Z
         griDis = 0 
 
