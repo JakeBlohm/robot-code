@@ -2,10 +2,14 @@ import PySimpleGUI as sg
 import configparser
 import threading
 from RobotArmControl import *
+
+config = configparser.ConfigParser()
+config.read('settings.ini')
+
 global coords
 global endEffector
 
-SCALE = 10
+scale = int(config['DEFAULT']['windowscale'])
 
 allMCAngle = [0, 0, 0, 0, 0, 0]
 endEffector = [0, 0, 0]
@@ -13,13 +17,13 @@ coords = [0, 0, 0]
 
 tooltipCat = None
 maxArmLength = 60
-radius = maxArmLength*SCALE
+radius = maxArmLength*scale
 halfRadius = radius/2
 
 menu = [["File", ["Settings",["Scale", ["4::4",'5::5','6::6','7::7','8::8','9::9','10::10']],"Exit"]]]
 
-sGBLx = -10*SCALE-1
-sGBLy = -2*SCALE-1
+sGBLx = -10*scale-1
+sGBLy = -2*scale-1
 sGCanSizeX = halfRadius+1+-sGBLx
 sGCanSizeY = halfRadius+1+-sGBLy
 
@@ -70,30 +74,30 @@ graph.Widget.config(cursor='circle')
 side.DrawLine((-1000, 0), (1000, 0))
 side.DrawLine((0, -1000), (0, 1000))
 
-wristS = side.DrawCircle((1,1), SCALE*0.75, fill_color='red', line_color='black')
-shoulderS = side.DrawCircle((1,1), SCALE*0.75, fill_color='black', line_color='black')
-elbowS = side.DrawCircle((1,1), SCALE*0.75, fill_color='black', line_color='black')
-gripperS = side.DrawCircle((1,1), SCALE*0.75, fill_color='green', line_color='black')
+wristS = side.DrawCircle((1,1), scale*0.75, fill_color='red', line_color='black')
+shoulderS = side.DrawCircle((1,1), scale*0.75, fill_color='black', line_color='black')
+elbowS = side.DrawCircle((1,1), scale*0.75, fill_color='black', line_color='black')
+gripperS = side.DrawCircle((1,1), scale*0.75, fill_color='green', line_color='black')
 
 segmentOneS = side.DrawLine((0,0), (0,0))
 segmentTwoS = side.DrawLine((0,0), (0,0))
 segmentThreeS = side.DrawLine((0,0),(0,0))
 
 def segOneVis():
-    cirVis = side.DrawCircle((1,1),30*SCALE/2,line_color='red')
-    cirVis2 = side.DrawCircle((1,30*SCALE/2), SCALE*0.75, fill_color='red', line_color='black')
+    cirVis = side.DrawCircle((1,1),30*scale/2,line_color='red')
+    cirVis2 = side.DrawCircle((1,30*scale/2), scale*0.75, fill_color='red', line_color='black')
 
 #segOneVis()
 
 for x in range(-60,60,10):
-    xTScale = x*SCALE
-    graph.DrawLine((xTScale, -10),(xTScale, 10))
-    graph.DrawText(x, (xTScale+15, -20), color='green')
+    xTscale = x*scale
+    graph.DrawLine((xTscale, -10),(xTscale, 10))
+    graph.DrawText(x, (xTscale+15, -20), color='green')
 
 for y in range(-60,60,10):
-    yTScale = y*SCALE
-    graph.DrawLine((-10, yTScale),(10, yTScale))
-    graph.DrawText(y, (+20, yTScale+15), color='blue')
+    yTscale = y*scale
+    graph.DrawLine((-10, yTscale),(10, yTscale))
+    graph.DrawText(y, (+20, yTscale+15), color='blue')
 
 wristG = graph.DrawCircle((0,0), 0, line_color='red')
 target = graph.DrawCircle((0,0), 0, line_color='blue')
@@ -141,7 +145,7 @@ def UpdateLoop():
         window['_mFiveAngle_'].update("Motor 5 Angle: {}".format(allMInfo[4][1]))
         window['_mSixAngle_'].update("Motor 6 Angle: {}".format(allMInfo[5][1]))
 
-        corEndX, corEndY, corEndZ, corEndDis, corMidDis, corMidX, corMidY, corMidZ, corGriX, corGriY, corGriZ, corGriDis = endX*SCALE, endY*SCALE, endZ*SCALE, endDis*SCALE, midDis*SCALE, midX*SCALE, midY*SCALE, midZ*SCALE, griX*SCALE, griY*SCALE, griZ*SCALE, griDis*SCALE
+        corEndX, corEndY, corEndZ, corEndDis, corMidDis, corMidX, corMidY, corMidZ, corGriX, corGriY, corGriZ, corGriDis = endX*scale, endY*scale, endZ*scale, endDis*scale, midDis*scale, midX*scale, midY*scale, midZ*scale, griX*scale, griY*scale, griZ*scale, griDis*scale
         
         graph.delete_figure(segmentOneG)
         segmentOneG = graph.DrawLine((0,0), (corMidX,corMidY))
@@ -151,11 +155,11 @@ def UpdateLoop():
         segmentThreeG = graph.DrawLine((corEndX,corEndY), (corGriX, corGriY))
 
         graph.delete_figure(gripperG)
-        gripperG = graph.DrawCircle((corGriX, corGriY), SCALE*1.5, fill_color='green', line_color='black')
+        gripperG = graph.DrawCircle((corGriX, corGriY), scale*1.5, fill_color='green', line_color='black')
         graph.delete_figure(wristG)
-        wristG = graph.DrawCircle((corEndX, corEndY), SCALE*1.5, fill_color='red', line_color='black')
+        wristG = graph.DrawCircle((corEndX, corEndY), scale*1.5, fill_color='red', line_color='black')
         graph.delete_figure(elbowG)
-        elbowG = graph.DrawCircle((corMidX, corMidY), SCALE*1.5, fill_color='black', line_color='black')
+        elbowG = graph.DrawCircle((corMidX, corMidY), scale*1.5, fill_color='black', line_color='black')
 
         side.delete_figure(segmentOneS)
         segmentOneS = side.DrawLine((0,0), (corMidDis/2,corMidZ/2))
@@ -165,16 +169,16 @@ def UpdateLoop():
         segmentThreeS = side.DrawLine((corEndDis/2,corEndZ/2), (corGriDis/2, corGriZ/2))
 
         side.delete_figure(gripperS)
-        gripperS = side.DrawCircle((corGriDis/2, corGriZ/2), SCALE*0.75, fill_color='green', line_color='black')
+        gripperS = side.DrawCircle((corGriDis/2, corGriZ/2), scale*0.75, fill_color='green', line_color='black')
         side.delete_figure(wristS)
-        wristS = side.DrawCircle((corEndDis/2, corEndZ/2), SCALE*0.75, fill_color='red', line_color='black')
+        wristS = side.DrawCircle((corEndDis/2, corEndZ/2), scale*0.75, fill_color='red', line_color='black')
         side.delete_figure(elbowS)
-        elbowS = side.DrawCircle((corMidDis/2, corMidZ/2), SCALE*0.75, fill_color='black', line_color='black')
+        elbowS = side.DrawCircle((corMidDis/2, corMidZ/2), scale*0.75, fill_color='black', line_color='black')
 
 def clickUpdate(x, y):
     global target
     graph.delete_figure(target)
-    target = graph.DrawCircle((x-1,y-1), SCALE*1.5, fill_color='blue', line_color='black')
+    target = graph.DrawCircle((x-1,y-1), scale*1.5, fill_color='blue', line_color='black')
 
 Math = threading.Thread(target=UpdateLoop, args=(), daemon=True)
 Math.start()
@@ -185,7 +189,9 @@ while True:
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
     elif event == '4::4':
-        pass
+        config.set('DEFAULT', 'Windowscale', '4')
+        with open('settings.ini', 'w') as configfile:
+            config.write(configfile)
     elif event == '5::5':
         pass
     elif event == '6::6':
@@ -203,8 +209,8 @@ while True:
     y = values['graph'][1]
     z = int(values['_coordInput_'])
 
-    coordinates = "X:{}, Y:{}, Z:{}".format(int(x/SCALE),int(y/SCALE),z)
-    coords = [x/SCALE, y/SCALE, z]
+    coordinates = "X:{}, Y:{}, Z:{}".format(int(x/scale),int(y/scale),z)
+    coords = [x/scale, y/scale, z]
     endEffector = [int(values['_endEffHori_']),int(values['_endEffVert_']),int(values['_gripperRotation_'])]
     coordText.update("Target Coordinates:  {}".format(coordinates))
     
