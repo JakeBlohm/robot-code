@@ -92,8 +92,6 @@ def segOneVis():
     cirVis = side.DrawCircle((1,1),30*scale/2,line_color='red')
     cirVis2 = side.DrawCircle((1,30*scale/2), scale*0.75, fill_color='red', line_color='black')
 
-#segOneVis()
-
 for x in range(-60,60,10):
     xTscale = x*scale
     graph.DrawLine((xTscale, -10),(xTscale, 10))

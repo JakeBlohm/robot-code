@@ -21,12 +21,17 @@ def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle, mFourCAngle, mFiveCAngle, mSixCA
         griYF = SEGMENT_THREE*math.cos(math.radians(mFiveCAngle))
         h = math.sqrt((griXF**2)+(griYF**2))
         b = math.atan(griXF/griYF)
-        griX = h*math.sin(math.radians(mOneCAngle) - b) + X
-        griY = h*math.cos(math.radians(mOneCAngle) - b) + Y
-        griZ = tempDis*math.sin(math.radians(mFourCAngle)) + Z
-        griDis = 0 
+        griX = h*math.sin(math.radians(mOneCAngle) - b)
+        griY = h*math.cos(math.radians(mOneCAngle) - b)
 
-        return X, Y, Z, curDistance, midDis, midX, midY, midZ, griX, griY, griZ, griDis
+        griZF = tempDis*math.sin(math.radians(mFourCAngle))
+        griDisF = math.sqrt(griXF**2+griYF**2)
+        h = math.sqrt((griZF**2)+(griDisF**2))
+        b = math.atan(griZF/griDisF)
+        griZ = h * math.sin(math.radians(180-(mTwoCAngle+(180-mThreeCAngle))) - b)
+        griDis = math.sqrt(griX**2+griY**2+griZ**2) + curDistance
+
+        return X, Y, Z, curDistance, midDis, midX, midY, midZ, griX + X, griY + Y, griZ + Z, griDis
     except:
         return 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
