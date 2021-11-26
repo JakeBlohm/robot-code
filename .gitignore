@@ -5,3 +5,8 @@ __pycache__/MotorMovement.cpython-39.pyc
 __pycache__/GUICalc.cpython-39.pyc
 __pycache__/ArmPostioner.cpython-39.pyc
 *.pyc
+.idea/
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/modules.xml
+.idea/robot-code.iml
+.idea/vcs.xml
