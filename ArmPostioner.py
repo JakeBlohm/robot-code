@@ -72,12 +72,12 @@ def mRotCalc(X,Y):
 def endMotors(xT, yT, zT, GR, mOneTAngle, mTwoTAngle, mThreeTAngle):
 	h = math.sqrt((xT**2)+(yT**2))
 	b = math.atan(xT/yT)
-	xO = h*math.sin(math.radians(mOneTAngle) - math.radians(b))
-	yO = h*math.cos(math.radians(mOneTAngle) - math.radians(b))
+	xO = h*math.sin(math.radians(mOneTAngle) - b)
+	yO = h*math.cos(math.radians(mOneTAngle) - b)
 	d = math.sqrt((yT**2)+(xT**2))
 	h = math.sqrt((zT**2)+(d**2))
 	b = math.atan(zT/d)
-	zO = h*math.sin(math.radians(180-(mTwoTAngle+(180-mThreeTAngle))) - math.radians(b))
+	zO = h*math.sin(math.radians(180-(mTwoTAngle+(180-mThreeTAngle))) - b)
 	if round(zO,0) != 0:
 		mFourTAngle = mRotCalc(xO,zO)
 	else:
