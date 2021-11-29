@@ -6,8 +6,8 @@ from RobotArmControl import *
 config = configparser.ConfigParser()
 config.read('settings.ini')
 scale = int(config['DEFAULT']['windowscale'])
-controllerMode = bool(config['DEFAULT']['controllermode'])
-if controllerMode is True:
+controllerMode = config['DEFAULT']['controllermode']
+if controllerMode == "True":
     windowTitle = config['DEFAULT']['windowTitle'] + " (Controller)"
 else:
     windowTitle = config['DEFAULT']['windowTitle'] + " (Mouse)"
@@ -281,29 +281,30 @@ if __name__ == '__main__':
             config.set('DEFAULT', 'controllermode', 'False')
             with open('settings.ini', 'w') as configfile:
                 config.write(configfile)
-            controllerMode = bool(config['DEFAULT']['controllermode'])
+            controllerMode = config['DEFAULT']['controllermode']
             windowTitle = config['DEFAULT']['windowTitle'] + " (Mouse)"
             window.TKroot.title(windowTitle)
         elif event == 'Controller':
             config.set('DEFAULT', 'controllermode', 'True')
             with open('settings.ini', 'w') as configfile:
                 config.write(configfile)
-            controllerMode = bool(config['DEFAULT']['controllermode'])
+            controllerMode = config['DEFAULT']['controllermode']
             windowTitle = config['DEFAULT']['windowTitle'] + " (Controller)"
             window.TKroot.title(windowTitle)
         try:
-            x = values['graph'][0]
-            y = values['graph'][1]
-            z = int(values['_coordInput_'])
+            if config['DEFAULT']['controllermode'] == "False":
+                x = values['graph'][0]
+                y = values['graph'][1]
+                z = int(values['_coordInput_'])
+                clickUpdate(x, y)
+            else:
+                pass
 
             coordinates = "X:{}, Y:{}, Z:{}".format(int(x / scale), int(y / scale), z)
             coords = [x / scale, y / scale, z]
             endEffector = [int(values['_endEffHori_']), int(values['_endEffVert_']), int(values['_gripperRotation_'])]
             coordText.update("Target Coordinates:  {}".format(coordinates))
-            if bool(config['DEFAULT']['controllermode']) is False:
-                clickUpdate(x, y)
-            else:
-                pass
+
         except:
             pass
 
