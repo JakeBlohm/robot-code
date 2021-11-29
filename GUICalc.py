@@ -1,37 +1,37 @@
 import math
-from ArmPositioner import SEGMENT_ONE, SEGMENT_THREE, SEGMENT_TWO, soh, cah, toa
+from ArmPositioner import SEGMENT_ONE, SEGMENT_THREE, SEGMENT_TWO, soh, cah, toa, pT
 
 def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle, mFourCAngle, mFiveCAngle, mSixCAngle):
     try:
-        curDistanceAngled = math.sqrt((SEGMENT_TWO**2)+(SEGMENT_ONE**2)-(2*SEGMENT_TWO*SEGMENT_ONE*math.cos(math.radians(180-mThreeCAngle))))
-        AAngle = 90 - ((math.degrees(math.acos(((SEGMENT_ONE**2)+(curDistanceAngled**2)-(SEGMENT_TWO**2))/(2*SEGMENT_ONE*curDistanceAngled))))+mTwoCAngle)
-        curDistance = math.cos(math.radians(AAngle))*curDistanceAngled
-        X = curDistance*math.sin(math.radians(mOneCAngle))
-        Y = curDistance*math.cos(math.radians(mOneCAngle))
-        Z = curDistanceAngled*math.sin(math.radians(AAngle))
+        curDistanceAngled =             math.sqrt((SEGMENT_TWO**2)+(SEGMENT_ONE**2)-(2*SEGMENT_TWO*SEGMENT_ONE*math.cos(math.radians(180-mThreeCAngle))))
+        AAngle =                    90 - ((math.degrees(math.acos(((SEGMENT_ONE**2)+(curDistanceAngled**2)-(SEGMENT_TWO**2))/(2*SEGMENT_ONE*curDistanceAngled))))+mTwoCAngle)
+        curDistance = cah(AAngle, None, curDistanceAngled)
+        x = soh(mOneCAngle, None, curDistance)
+        y = cah(mOneCAngle, None, curDistance)
+        z = soh(AAngle, None, curDistanceAngled)
 
-        midDis= SEGMENT_ONE*math.sin(math.radians(mTwoCAngle))
-        midX = midDis*math.sin(math.radians(mOneCAngle))
-        midY = midDis*math.cos(math.radians(mOneCAngle))
-        midZ = SEGMENT_ONE*math.cos(math.radians(mTwoCAngle))
+        midDis= soh(mTwoCAngle, None, SEGMENT_ONE)
+        midX = soh(mOneCAngle, None, midDis)
+        midY = cah(mOneCAngle, None, midDis)
+        midZ = cah(mTwoCAngle, None, SEGMENT_ONE)
         
-        tempDis = SEGMENT_THREE*math.sin(math.radians(mFiveCAngle))
+        tempDis = soh(mFiveCAngle, None, SEGMENT_THREE)
 
-        griXF = tempDis*math.cos(math.radians(mFourCAngle))
-        griYF = SEGMENT_THREE*math.cos(math.radians(mFiveCAngle))
-        h = math.sqrt((griXF**2)+(griYF**2))
-        b = math.atan(griXF/griYF)
-        griX = h*math.sin(math.radians(mOneCAngle) - b)
-        griY = h*math.cos(math.radians(mOneCAngle) - b)
+        griXF = cah(mFourCAngle, None, tempDis)
+        griYF = cah(mFiveCAngle, None, SEGMENT_THREE)
+        h = pT(griXF, griYF)
+        angle = mOneCAngle - soh(None,griXF,h)
+        griX = soh(angle, None, h)
+        griY = cah(angle, None, h)
 
-        griZF = tempDis*math.sin(math.radians(mFourCAngle))
-        griDisF = math.sqrt(griXF**2+griYF**2)
-        h = math.sqrt((griZF**2)+(griDisF**2))
-        b = math.atan(griZF/griDisF)
-        griZ = h * math.sin(math.radians(180-(mTwoCAngle+(180-mThreeCAngle))) - b)
-        griDis = math.sqrt(griX**2+griY**2+griZ**2) + curDistance
+        griZF = soh(mFourCAngle, None, tempDis)
+        griDisF = h
+        h = pT(griZF, griDisF)
+        angle = 180-(mTwoCAngle+(180-mThreeCAngle)) - soh(None, griZF, h)
+        griZ =soh(angle, None , h)
+        griDis = pT(griX, griY, griZ) + curDistance
 
-        return X, Y, Z, curDistance, midDis, midX, midY, midZ, griX + X, griY + Y, griZ + Z, griDis
+        return x, y, z, curDistance, midDis, midX, midY, midZ, griX + x, griY + y, griZ + z, griDis
     except:
         return 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 

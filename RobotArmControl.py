@@ -61,15 +61,6 @@ def mainLoop(coords,endEffector):
     allMInfo = [motorOne, motorTwo, motorThree, motorFour, motorFive, motorSix]
     allMCAngle = [motorOne[1], motorTwo[1], motorThree[1], motorFour[1], motorFive[1], motorSix[1]]
 
-    CX, CY, CZ, t, t, t, t, t, t, t, t, t= GUIUpdate(allMCAngle)
-
-    if DEVMODE == False:
-        Clear()
-    print("Current X: {} Y: {} Z: {}".format(CX, CY, CZ))
-    print("Target  X: {} Y: {} Z: {}".format(round(coords[0],2), round(coords[1],2), round(coords[2],2)))
-    print("Motor One RPS: {}\nMotor Two RPS: {}\nMotor Three RPS: {}\nMotor Four RPS: {}\nMotor Five RPS: {}\nMotor Six RPS: {}".format(motorOne[3], motorTwo[3], motorThree[3], motorFour[3], motorFive[3], motorSix[3]))
-    print("Motor One Angle: {}\nMotor Two Angle: {}\nMotor Three Angle: {}\nMotor Four Angle: {}\nMotor Five Angle: {}\nMotor Six Angle: {}".format(motorOne[1], motorTwo[1], motorThree[1], motorFour[1], motorFive[1], motorSix[1]))
-    
     time.sleep(1/Motor.CYCLESPERSECOND)
     
     return allMInfo
