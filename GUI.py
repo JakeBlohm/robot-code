@@ -5,10 +5,12 @@ from RobotArmControl import *
 
 config = configparser.ConfigParser()
 config.read('settings.ini')
-
 scale = int(config['DEFAULT']['windowscale'])
-windowTitle = config['DEFAULT']['windowTitle']
 controllerMode = bool(config['DEFAULT']['controllermode'])
+if controllerMode is True:
+    windowTitle = config['DEFAULT']['windowTitle'] + " (Controller)"
+else:
+    windowTitle = config['DEFAULT']['windowTitle'] + " (Mouse)"
 allMCAngle = [0, 0, 0, 0, 0, 0]
 endEffector = [0, 0, 0]
 coords = [0, 0, 0]
@@ -119,7 +121,7 @@ def createLayout():
     sGBLy = -2 * scale - 1
     sGCanSizeX = halfRadius + 1 + -sGBLx
     sGCanSizeY = halfRadius + 1 + -sGBLy
-    menu = [["File", ["Settings", ["Scale", ["4::4", '5::5', '6::6', '7::7', '8::8', '9::9', '10::10']], ["Mode", ["Mouse", "Controller"]], "Exit"]]]
+    menu = [["File", ["Settings", ["Scale", ["4::4", '5::5', '6::6', '7::7', '8::8', '9::9', '10::10'], ["Mode", ["Mouse", "Controller"]]], "Exit"]]]
 
     data_column = sg.Column([
         [sg.Text("Target Coordinates:  {}".format(tooltipCat), key='_targetCoords_')],
@@ -280,11 +282,15 @@ if __name__ == '__main__':
             with open('settings.ini', 'w') as configfile:
                 config.write(configfile)
             controllerMode = bool(config['DEFAULT']['controllermode'])
+            windowTitle = config['DEFAULT']['windowTitle'] + " (Mouse)"
+            window.TKroot.title(windowTitle)
         elif event == 'Controller':
             config.set('DEFAULT', 'controllermode', 'True')
             with open('settings.ini', 'w') as configfile:
                 config.write(configfile)
             controllerMode = bool(config['DEFAULT']['controllermode'])
+            windowTitle = config['DEFAULT']['windowTitle'] + " (Controller)"
+            window.TKroot.title(windowTitle)
         try:
             x = values['graph'][0]
             y = values['graph'][1]
