@@ -132,9 +132,9 @@ def createLayout():
         [sg.Text("Motor 4 RPS: ", key='_mFourRPS_'), sg.Text("Motor 4 Angle: ", key='_mFourAngle_')],
         [sg.Text("Motor 5 RPS: ", key='_mFiveRPS_'), sg.Text("Motor 5 Angle: ", key='_mFiveAngle_')],
         [sg.Text("Motor 6 RPS: ", key='_mSixRPS_'), sg.Text("Motor 6 Angle: ", key='_mSixAngle_')],
-        [sg.Graph(canvas_size=(sGCanSizeX, sGCanSizeY),
+        [sg.Graph(canvas_size=(int(sGCanSizeX), int(sGCanSizeY)),
                   graph_bottom_left=(sGBLx, sGBLy),
-                  graph_top_right=(halfRadius, halfRadius),
+                  graph_top_right=(int(halfRadius), int(halfRadius)),
                   background_color='white',
                   # enable_events = True,
                   key='_side_')]
