@@ -111,7 +111,6 @@ def mRotCalc(a, b):
     return m
 
 
-<<<<<<< HEAD
 def endMotors(xF, yF, zF, GR, mOneTAngle, mTwoTAngle, mThreeTAngle):
 	h = pT(xF,yF)
 	angle = mOneTAngle - soh(None,xF,h)
@@ -129,25 +128,6 @@ def endMotors(xF, yF, zF, GR, mOneTAngle, mTwoTAngle, mThreeTAngle):
 	mFiveTAngle = cah(None, z, END_EFFECTOR_OFFSET)
 	mSixTAngle = GR - mFourTAngle
 	return mFourTAngle, mFiveTAngle, mSixTAngle
-=======
-def endMotors(xT, yT, zT, GR, mOneTAngle, mTwoTAngle, mThreeTAngle):
-    h = pT(xT, yT)
-    b = toa(None, xT, yT)
-    xO = soh(mOneTAngle - b, None, h)
-    yO = cah(mOneTAngle - b, None, h)
-    d = pT(yT, xT)
-    h = pT(zT, d)
-    b = toa(None, zT, d)
-    zO = soh(180 - (mTwoTAngle + (180 - mThreeTAngle)) - b, None, h)
-    if round(zO, 0) != 0:
-        mFourTAngle = mRotCalc(xO, zO)
-    else:
-        mFourTAngle = 0
-    mFiveTAngle = soh(None, pT(xO, zO), END_EFFECTOR_OFFSET)
-    mSixTAngle = GR - mFourTAngle
-    return mFourTAngle, mFiveTAngle, mSixTAngle
-
->>>>>>> 57e668a0a0a97b47d1305cbec7fd5205474c3502
 
 def MotorAngleCalc(x, y, z, xO, yO, zO, eH, eV, gR):
     global lastAngles
@@ -167,7 +147,6 @@ def MotorAngleCalc(x, y, z, xO, yO, zO, eH, eV, gR):
 
 
 def AllMotorCalc(coords, endEffector):
-<<<<<<< HEAD
 	global lastCoords
 	global lastAngles
 	if coords != lastCoords:
@@ -183,20 +162,3 @@ def AllMotorCalc(coords, endEffector):
 		return allMTAngle
 	else:
 		return lastAngles
-=======
-    global lastCoords
-    global lastAngles
-    if coords != lastCoords:
-        Temp = (END_EFFECTOR_OFFSET * math.cos(math.radians(endEffector[1])))
-        if endEffector[0] < 0:
-            Temp = Temp
-        x = coords[0] - (soh(endEffector[0], None, Temp))
-        y = coords[1] - (cah(endEffector[0], None, Temp))
-        z = coords[2] - (END_EFFECTOR_OFFSET * math.sin(math.radians(endEffector[1])))
-        xO, yO, zO = coords[0] - x, coords[1] - y, coords[2] - z
-        allMTAngle = MotorAngleCalc(x, y, z, xO, yO, zO, endEffector[0], endEffector[1], endEffector[2])
-        lastCoords = coords
-        return allMTAngle
-    else:
-        return lastAngles
->>>>>>> 57e668a0a0a97b47d1305cbec7fd5205474c3502
