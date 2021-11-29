@@ -80,7 +80,7 @@ def endMotors(xF, yF, zF, GR, mOneTAngle, mTwoTAngle, mThreeTAngle):
 
     d = h
     h = pT(zF, d)
-    angle = 180 - (mTwoTAngle + (180 - mThreeTAngle)) - soh(None, zF, h)
+    angle = ((180 - mThreeTAngle) - mTwoTAngle) - soh(None, zF, h)
     z = soh(angle, None, h)
     if round(z, 0) != 0:
         mFourTAngle = mRotCalc(x, z)
