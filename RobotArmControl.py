@@ -1,7 +1,7 @@
 import sys
 from GUICalc import GUIUpdate
 from MotorMovement import Motor
-from ArmPostioner import AllMotorCalc
+from ArmPositioner import AllMotorCalc
 from Validation import CoordsValidation
 import time
 import os

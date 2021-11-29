@@ -1,5 +1,5 @@
 import math
-from ArmPostioner import MAX_ARM_LENGTH
+from ArmPositioner import MAX_ARM_LENGTH
 global lastCoords
 lastCoords = [0 ,40, 0]
 

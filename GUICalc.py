@@ -1,5 +1,5 @@
 import math
-from ArmPostioner import SEGMENT_ONE, SEGMENT_THREE, SEGMENT_TWO, soh, cah, toa
+from ArmPositioner import SEGMENT_ONE, SEGMENT_THREE, SEGMENT_TWO, soh, cah, toa
 
 def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle, mFourCAngle, mFiveCAngle, mSixCAngle):
     try:
