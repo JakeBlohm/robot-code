@@ -96,10 +96,8 @@ def MotorAngleCalc(x, y, z, xO, yO, zO, eH, eV, gR):
     mOneTAngle = mRotCalc(x, y)
     try:
         tarDistance = pT(x, y, z)
-        mTwoTAngle = (90 - ((math.degrees(math.asin(z / tarDistance))) + (math.degrees(math.acos(
-            ((SEGMENT_ONE ** 2) + (tarDistance ** 2) - (SEGMENT_TWO ** 2)) / (2 * SEGMENT_ONE * tarDistance))))))
-        mThreeTAngle = (180 - (math.degrees(math.acos(
-            ((SEGMENT_TWO ** 2) + (SEGMENT_ONE ** 2) - (tarDistance ** 2)) / (2 * SEGMENT_TWO * SEGMENT_ONE)))))
+        mTwoTAngle = 90 - (soh(None, z, tarDistance) + cosrl(None, SEGMENT_ONE, tarDistance, SEGMENT_TWO))
+        mThreeTAngle = 180 - cosrl(None, SEGMENT_TWO, SEGMENT_ONE, tarDistance)
         mFourTAngle, mFiveTAngle, mSixTAngle = endMotors(xO, yO, zO, gR, mOneTAngle, mTwoTAngle, mThreeTAngle)
         lastAngles = [mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle]
         return [mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle]

@@ -300,7 +300,10 @@ if __name__ == '__main__':
             coords = [x / scale, y / scale, z]
             endEffector = [int(values['_endEffHori_']), int(values['_endEffVert_']), int(values['_gripperRotation_'])]
             coordText.update("Target Coordinates:  {}".format(coordinates))
-            clickUpdate(x, y)
+            if bool(config['DEFAULT']['controllermode']) is False:
+                clickUpdate(x, y)
+            else:
+                pass
         except:
             pass
 

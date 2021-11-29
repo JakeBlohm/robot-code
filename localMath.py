@@ -51,5 +51,5 @@ def cosrl(ang, a, b, c):
     if ang is None:
         numerator = (a**2) + (b**2) - (c**2)
         denominator = 2*a*b
-        ans = math.radians(math.acos(numerator/denominator))
+        ans = math.degrees(math.acos(numerator/denominator))
     return ans
