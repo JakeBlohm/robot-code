@@ -1,6 +1,7 @@
 # Input: Coords + arm geo + joint limits
 # Return: motor targetAngle
 import math
+from localMath import *
 
 # GLOBAL is good - not really
 global MOTOR_ONE_OFFSET
@@ -50,60 +51,6 @@ lastAngles = [0, 0, 0, 0, 0, 0]
 # MotorOne position calculation, E is end effector, O is coords offset from segment 3
 
 
-def pT(a, b, c=0):
-    return math.sqrt(a ** 2 + b ** 2 + c ** 2)
-
-
-def soh(ang, opp, hyp):
-    if opp is None:
-        ans = hyp * math.sin(math.radians(ang))
-    elif hyp is None:
-        ans = opp / math.sin(math.radians(ang))
-    elif ang is None:
-        ans = math.degrees(math.asin(opp / hyp))
-    else:
-        print("Could not find missing data")
-    return ans
-
-
-def cah(ang, adj, hyp):
-    if adj is None:
-        ans = hyp * math.cos(math.radians(ang))
-    elif hyp is None:
-        ans = adj / math.cos(math.radians(ang))
-    elif ang is None:
-        ans = math.degrees(math.acos(adj / hyp))
-    else:
-        print("Could not find missing data")
-    return ans
-
-
-def toa(ang, opp, adj):
-    if opp is None:
-        ans = adj * math.tan(math.radians(ang))
-    elif adj is None:
-        ans = opp / math.tan(math.radians(ang))
-    elif ang is None:
-        ans = math.degrees(math.atan(opp / adj))
-    else:
-        print("Could not find missing data")
-    return ans
-
-
-def cosrl(ang, a, b, c):
-    if a is None:
-        ans = b * math.cos(math.radians(ang)) + math.sqrt((c**2) - (b**2) * (math.sin(math.radians(ang))**2))
-    if b is None:
-        ans = a * math.cos(math.radians(ang)) + math.sqrt((c**2) - (a**2) * (math.sin(math.radians(ang))**2))
-    if c is None:
-        ans = math.sqrt((a**2) + (b**2) - 2*a*b*math.cos(math.radians(ang)))
-    if ang is None:
-        numerator = (a**2) + (b**2) - (c**2)
-        denominator = 2*a*b
-        ans = math.radians(math.acos(numerator/denominator))
-    return ans
-
-
 def mRotCalc(a, b):
     if b != 0:
         if a == 0 and b < 0:
@@ -126,22 +73,23 @@ def mRotCalc(a, b):
 
 
 def endMotors(xF, yF, zF, GR, mOneTAngle, mTwoTAngle, mThreeTAngle):
-	h = pT(xF,yF)
-	angle = mOneTAngle - soh(None,xF,h)
-	x = soh(angle,None,h)
-	y = cah(angle,None,h)
+    h = pT(xF, yF)
+    angle = mOneTAngle - soh(None, xF, h)
+    x = soh(angle, None, h)
+    y = cah(angle, None, h)
 
-	d = h
-	h = pT(zF,d)
-	angle = 180-(mTwoTAngle+(180-mThreeTAngle)) - soh(None, zF, h)
-	z = soh(angle, None, h)
-	if round(z,0) != 0:
-		mFourTAngle = mRotCalc(x,z)
-	else:
-   		mFourTAngle = 0
-	mFiveTAngle = cah(None, z, END_EFFECTOR_OFFSET)
-	mSixTAngle = GR - mFourTAngle
-	return mFourTAngle, mFiveTAngle, mSixTAngle
+    d = h
+    h = pT(zF, d)
+    angle = 180 - (mTwoTAngle + (180 - mThreeTAngle)) - soh(None, zF, h)
+    z = soh(angle, None, h)
+    if round(z, 0) != 0:
+        mFourTAngle = mRotCalc(x, z)
+    else:
+        mFourTAngle = 0
+    mFiveTAngle = cah(None, z, END_EFFECTOR_OFFSET)
+    mSixTAngle = GR - mFourTAngle
+    return mFourTAngle, mFiveTAngle, mSixTAngle
+
 
 def MotorAngleCalc(x, y, z, xO, yO, zO, eH, eV, gR):
     global lastAngles
@@ -161,18 +109,18 @@ def MotorAngleCalc(x, y, z, xO, yO, zO, eH, eV, gR):
 
 
 def AllMotorCalc(coords, endEffector):
-	global lastCoords
-	global lastAngles
-	if coords != lastCoords:
-		Temp = (END_EFFECTOR_OFFSET*math.cos(math.radians(endEffector[1])))
-		if endEffector[0] < 0:
-			Temp = Temp
-		x = coords[0] - (soh(endEffector[0],None,Temp))
-		y = coords[1] - (cah(endEffector[0],None,Temp))
-		z = coords[2] - (END_EFFECTOR_OFFSET*math.sin(math.radians(endEffector[1])))
-		xO, yO, zO = coords[0] - x, coords[1] - y, coords[2] - z 
-		allMTAngle = MotorAngleCalc(x, y, z, xO, yO, zO, endEffector[0], endEffector[1], endEffector[2])
-		lastCoords = coords
-		return allMTAngle
-	else:
-		return lastAngles
+    global lastCoords
+    global lastAngles
+    if coords != lastCoords:
+        Temp = (END_EFFECTOR_OFFSET * math.cos(math.radians(endEffector[1])))
+        if endEffector[0] < 0:
+            Temp = Temp
+        x = coords[0] - (soh(endEffector[0], None, Temp))
+        y = coords[1] - (cah(endEffector[0], None, Temp))
+        z = coords[2] - (END_EFFECTOR_OFFSET * math.sin(math.radians(endEffector[1])))
+        xO, yO, zO = coords[0] - x, coords[1] - y, coords[2] - z
+        allMTAngle = MotorAngleCalc(x, y, z, xO, yO, zO, endEffector[0], endEffector[1], endEffector[2])
+        lastCoords = coords
+        return allMTAngle
+    else:
+        return lastAngles
