@@ -77,13 +77,19 @@ def endMotors(xF, yF, zF, GR, mOneTAngle, mTwoTAngle, mThreeTAngle):
     angle = mOneTAngle - soh(None, xF, h)
     x = soh(angle, None, h)
     y = cah(angle, None, h)
-
+    if angle < 0:
+        x = -x
+        y = -y
     d = h
     h = pT(zF, d)
     angle = ((180 - mThreeTAngle) - mTwoTAngle) - soh(None, zF, h)
     z = soh(angle, None, h)
+    if angle < 0:
+        z = -z
+    print("XF: {} YF: {} ZF: {}".format(xF,yF,zF))
+    print("X: {} Y: {} Z: {}".format(x,y,z))
     if round(z, 0) != 0:
-        mFourTAngle = mRotCalc(x, z)
+        mFourTAngle = mRotCalc(d, z)
     else:
         mFourTAngle = 0
     mFiveTAngle = cah(None, z, END_EFFECTOR_OFFSET)

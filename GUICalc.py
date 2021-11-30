@@ -25,12 +25,17 @@ def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle, mFourCAngle, mFiveCAngle, mSixCA
         angle = mOneCAngle - soh(None, griXF, h)
         griX = soh(angle, None, h)
         griY = cah(angle, None, h)
+        if angle < 0:
+           girX = -griX
+           griY = -griY
 
         griZF = soh(mFourCAngle, None, tempDis)
         griDisF = h
         h = pT(griZF, griDisF)
         angle = ((180-mThreeCAngle)- mTwoCAngle) - soh(None, griZF, h)
         griZ = soh(angle, None, h)
+        if angle < 0:
+           girZ = -griZ
         griDis = pT(griX, griY, griZ) + curDistance
 
         return x, y, z, curDistance, midDis, midX, midY, midZ, griX + x, griY + y, griZ + z, griDis
