@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 import configparser
 import threading
 from controllerHandler import getControllerInput
+from inputHandler import inputHandler
 from RobotArmControl import *
 
 config = configparser.ConfigParser()
@@ -227,6 +228,7 @@ if __name__ == '__main__':
     update = threading.Thread(target=UpdateLoop, args=(), daemon=True)
     controller.start()
     update.start()
+    handler = inputHandler()
     while True:
         event, values = window.read()
         if event == sg.WIN_CLOSED or event == 'Exit':
@@ -298,18 +300,19 @@ if __name__ == '__main__':
             config.set('DEFAULT', 'controllermode', 'Mouse')
             with open('settings.ini', 'w') as configfile:
                 config.write(configfile)
-            controllerMode = config['DEFAULT']['controllermode']
-            windowTitle = "{} - [{}]".format(config['DEFAULT']['windowTitle'], controllerMode)
-            window.TKroot.title(windowTitle)
+            handler.mode = "Mouse"
         elif event == 'Controller':
             config.set('DEFAULT', 'controllermode', 'Controller')
             with open('settings.ini', 'w') as configfile:
                 config.write(configfile)
+            handler.mode = "Controller"
+            handler.getGamepad()
+        try:
+            handlerReturn = handler.eventLoop()
             controllerMode = config['DEFAULT']['controllermode']
             windowTitle = "{} - [{}]".format(config['DEFAULT']['windowTitle'], controllerMode)
             window.TKroot.title(windowTitle)
-        try:
-            if config['DEFAULT']['controllermode'] == "Controller":
+            if handler.mode == "Controller":
                 global newX
                 global newY
                 print("Controller")
@@ -317,22 +320,19 @@ if __name__ == '__main__':
                 x, y = newX, newY
                 z = int(values['_coordInput_'])
                 circleUpdate(x, y)
-            elif config['DEFAULT']['controllermode'] == "Mouse":
+            elif handler.mode == "Mouse":
                 print("Mouse")
                 x = values['graph'][0]
                 y = values['graph'][1]
                 z = int(values['_coordInput_'])
                 circleUpdate(x, y)
-
             else:
-                print("Settings.ini error")
-                pass
-
+                sg.popup_error("Input error.")
+                continue
             coordinates = "X:{}, Y:{}, Z:{}".format(int(x / scale), int(y / scale), z)
             coords = [x / scale, y / scale, z]
             endEffector = [int(values['_endEffHori_']), int(values['_endEffVert_']), int(values['_gripperRotation_'])]
             coordText.update("Target Coordinates:  {}".format(coordinates))
-
         except:
             pass
 

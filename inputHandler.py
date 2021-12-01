@@ -10,7 +10,6 @@ class inputHandler:
 
     def __init__(self):
         self.events = None
-        self.getGamepad()
 
     def getGamepad(self):
         retry = True
@@ -20,7 +19,8 @@ class inputHandler:
                 print("Try get_gamepad.")
             except:
                 choice = sg.Window('ERROR', [[sg.T('Gamepad not found, set to mouse mode.')],
-                                             [sg.B(button_text="Continue in mouse mode", key='__cont__'), sg.B(button_text="Retry", key='__retry__')]],
+                                             [sg.B(button_text="Continue in mouse mode", key='__cont__'),
+                                              sg.B(button_text="Retry", key='__retry__')]],
                                    disable_close=True).read(close=True)
                 if choice[0] == '__retry__':
                     print("Retry")
@@ -43,7 +43,12 @@ class inputHandler:
                 return 'controller'
 
 
-handler = inputHandler()
+if __name__ == '__main__':
+    handler = inputHandler()
 
-while True:
-    result = handler.eventLoop()
+    while True:
+        result = handler.eventLoop()
+        if result == 'mouse':
+            print('mouse')
+        elif result == 'controller':
+            print('controller')
