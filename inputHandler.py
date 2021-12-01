@@ -23,9 +23,10 @@ class inputHandler:
                                              [sg.B(button_text="Continue in mouse mode", key='__cont__'), sg.B(button_text="Retry", key='__retry__')]],
                                    disable_close=True).read(close=True)
                 if choice[0] == '__retry__':
+                    print("Retry")
                     continue
                 else:
-                    print("huh")
+                    print("Continue")
                     self.config.set('DEFAULT', 'controllermode', 'Mouse')
                     with open('settings.ini', 'w') as configfile:
                         self.config.write(configfile)
@@ -46,4 +47,3 @@ handler = inputHandler()
 
 while True:
     result = handler.eventLoop()
-    print(result)
