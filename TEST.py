@@ -18,22 +18,6 @@ maxArmLength = 60
 contX, contY = 0, 0
 
 
-def inputLoop():
-    while config['DEFAULT']['controllermode'] == "Controller":
-        try:
-            global newX
-            global newY
-            global contX
-            global contY
-            print(contX)
-            print(contY)
-            newX, newY = getControllerInput(contX, contY)
-            print(newX)
-            print(newY)
-        except:
-            continue
-
-
 def circleUpdate(newx, newy):
     global target
     graph.delete_figure(target)
@@ -137,7 +121,8 @@ def createLayout():
     sGBLy = -2 * scale - 1
     sGCanSizeX = halfRadius + 1 + -sGBLx
     sGCanSizeY = halfRadius + 1 + -sGBLy
-    menu = [["File", ["Settings", ["Scale", ["4::4", '5::5', '6::6', '7::7', '8::8', '9::9', '10::10'], ["Mode", ["Mouse", "Controller"]]], "Exit"]]]
+    menu = [["File", ["Settings", ["Scale", ["4::4", '5::5', '6::6', '7::7', '8::8', '9::9', '10::10'],
+                                   ["Mode", ["Mouse", "Controller"]]], "Exit"]]]
 
     data_column = sg.Column([
         [sg.Text("Target Coordinates:  {}".format(tooltipCat), key='_targetCoords_')],
@@ -176,6 +161,26 @@ def createLayout():
     return layout
 
 
+def updateInfo(allMInfo, griX, griY, griZ):
+    window['_currentCoords_'].update("Current Coordinates: X:{}, Y:{}, Z:{}".format(int(griX), int(griY), int(griZ)))
+    window['_mOneRPS_'].update("Motor 1 RPS: {}".format(allMInfo[0][3]))
+    window['_mTwoRPS_'].update("Motor 2 RPS: {}".format(allMInfo[1][3]))
+    window['_mThreeRPS_'].update("Motor 3 RPS: {}".format(allMInfo[2][3]))
+    window['_mFourRPS_'].update("Motor 4 RPS: {}".format(allMInfo[3][3]))
+    window['_mFiveRPS_'].update("Motor 5 RPS: {}".format(allMInfo[4][3]))
+    window['_mSixRPS_'].update("Motor 6 RPS: {}".format(allMInfo[5][3]))
+    window['_mOneAngle_'].update("Motor 1 Angle: {}".format(allMInfo[0][1]))
+    window['_mTwoAngle_'].update("Motor 2 Angle: {}".format(allMInfo[1][1]))
+    window['_mThreeAngle_'].update("Motor 3 Angle: {}".format(allMInfo[2][1]))
+    window['_mFourAngle_'].update("Motor 4 Angle: {}".format(allMInfo[3][1]))
+    window['_mFiveAngle_'].update("Motor 5 Angle: {}".format(allMInfo[4][1]))
+    window['_mSixAngle_'].update("Motor 6 Angle: {}".format(allMInfo[5][1]))
+
+
+def inputLoop(mode, cx, cy):
+    pass
+
+
 def UpdateLoop():
     while True:
 
@@ -186,24 +191,11 @@ def UpdateLoop():
 
         endX, endY, endZ, endDis, midDis, midX, midY, midZ, griX, griY, griZ, griDis = GUIUpdate(allMCAngle)
 
-        window['_currentCoords_'].update("Current Coordinates: X:{}, Y:{}, Z:{}".format(int(griX), int(griY), int(griZ)))
-        window['_mOneRPS_'].update("Motor 1 RPS: {}".format(allMInfo[0][3]))
-        window['_mTwoRPS_'].update("Motor 2 RPS: {}".format(allMInfo[1][3]))
-        window['_mThreeRPS_'].update("Motor 3 RPS: {}".format(allMInfo[2][3]))
-        window['_mFourRPS_'].update("Motor 4 RPS: {}".format(allMInfo[3][3]))
-        window['_mFiveRPS_'].update("Motor 5 RPS: {}".format(allMInfo[4][3]))
-        window['_mSixRPS_'].update("Motor 6 RPS: {}".format(allMInfo[5][3]))
-        window['_mOneAngle_'].update("Motor 1 Angle: {}".format(allMInfo[0][1]))
-        window['_mTwoAngle_'].update("Motor 2 Angle: {}".format(allMInfo[1][1]))
-        window['_mThreeAngle_'].update("Motor 3 Angle: {}".format(allMInfo[2][1]))
-        window['_mFourAngle_'].update("Motor 4 Angle: {}".format(allMInfo[3][1]))
-        window['_mFiveAngle_'].update("Motor 5 Angle: {}".format(allMInfo[4][1]))
-        window['_mSixAngle_'].update("Motor 6 Angle: {}".format(allMInfo[5][1]))
-
         corEndX, corEndY, corEndZ, corEndDis, corMidDis, corMidX, corMidY, corMidZ, corGriX, corGriY, corGriZ, corGriDis = endX * scale, endY * scale, endZ * scale, endDis * scale, midDis * scale, midX * scale, midY * scale, midZ * scale, griX * scale, griY * scale, griZ * scale, griDis * scale
 
         updateGraphShapes(corMidX, corMidY, corEndX, corEndY, corGriX, corGriY)
         updateSideShapes(corMidDis, corMidZ, corEndDis, corEndZ, corGriDis, corGriZ)
+        updateInfo(allMInfo, griX, griY, griZ)
 
 
 class GUIWindow:
@@ -224,9 +216,9 @@ if __name__ == '__main__':
     window, graph, side, coordText = GUIWindow(windowTitle, createLayout()).createNewWindow()
     wristS, shoulderS, elbowS, gripperS, segmentOneS, segmentTwoS, segmentThreeS = createSideShapes()
     wristG, target, elbowG, gripperG, segmentOneG, segmentTwoG, segmentThreeG = createGraphShapes()
-    controller = threading.Thread(target=inputLoop, args=(), daemon=True)
+    inputLp = threading.Thread(target=inputLoop, args=(), daemon=True)
     update = threading.Thread(target=UpdateLoop, args=(), daemon=True)
-    controller.start()
+    inputLp.start()
     update.start()
     handler = inputHandler()
     while True:
@@ -312,7 +304,7 @@ if __name__ == '__main__':
             controllerMode = config['DEFAULT']['controllermode']
             windowTitle = "{} - [{}]".format(config['DEFAULT']['windowTitle'], controllerMode)
             window.TKroot.title(windowTitle)
-            if handler.mode == "Controller":
+            if config['DEFAULT']['controllermode'] == "Controller":
                 global newX
                 global newY
                 print("Controller")
@@ -320,7 +312,7 @@ if __name__ == '__main__':
                 x, y = newX, newY
                 z = int(values['_coordInput_'])
                 circleUpdate(x, y)
-            elif handler.mode == "Mouse":
+            elif config['DEFAULT']['controllermode'] == "Mouse":
                 print("Mouse")
                 x = values['graph'][0]
                 y = values['graph'][1]

@@ -15,8 +15,9 @@ class inputHandler:
         retry = True
         while retry:
             try:
-                self.events = get_gamepad()
                 print("Try get_gamepad.")
+                self.events = get_gamepad()
+                retry = False
             except:
                 choice = sg.Window('ERROR', [[sg.T('Gamepad not found, set to mouse mode.')],
                                              [sg.B(button_text="Continue in mouse mode", key='__cont__'),
