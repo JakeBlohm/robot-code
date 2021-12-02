@@ -1,5 +1,5 @@
 import math
-from ArmPositioner import SEGMENT_ONE, SEGMENT_THREE, SEGMENT_TWO
+from ArmPositioner import END_EFFECTOR_OFFSET, SEGMENT_ONE, SEGMENT_THREE, SEGMENT_TWO
 from localMath import *
 
 
@@ -19,23 +19,18 @@ def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle, mFourCAngle, mFiveCAngle, mSixCA
         
         tempDis = soh(mFiveCAngle, None, SEGMENT_THREE)
 
+        griZF = cah(mFiveCAngle, None, END_EFFECTOR_OFFSET)
         griXF = cah(mFourCAngle, None, tempDis)
         griYF = cah(mFiveCAngle, None, SEGMENT_THREE)
-        h = pT(griXF, griYF)
-        angle = mOneCAngle - soh(None, griXF, h)
-        griX = soh(angle, None, h)
-        griY = cah(angle, None, h)
-        if angle < 0:
-           girX = -griX
-           griY = -griY
+        
+        
 
-        griZF = soh(mFourCAngle, None, tempDis)
-        griDisF = h
-        h = pT(griZF, griDisF)
-        angle = ((180-mThreeCAngle)- mTwoCAngle) - soh(None, griZF, h)
-        griZ = soh(angle, None, h)
-        if angle < 0:
-           girZ = -griZ
+        griX = 0
+        griY = 0
+        griZ = 0
+
+        print(griZ)
+
         griDis = pT(griX, griY, griZ) + curDistance
 
         return x, y, z, curDistance, midDis, midX, midY, midZ, griX + x, griY + y, griZ + z, griDis
