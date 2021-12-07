@@ -5,6 +5,7 @@ from controllerHandler import getControllerInput
 from inputHandler import inputHandler
 from RobotArmControl import *
 
+handler = inputHandler()
 config = configparser.ConfigParser()
 config.read('settings.ini')
 scale = int(config['DEFAULT']['windowscale'])
@@ -114,7 +115,11 @@ def updateSideShapes(corMidDis, corMidZ, corEndDis, corEndZ, corGriDis, corGriZ)
     elbowS = side.DrawCircle((corMidDis / 2, corMidZ / 2), scale * 0.75, fill_color='black', line_color='black')
 
 
-def createLayout():
+def createLayout(mode):
+    if mode == 'Mouse':
+        eventsEnb = True
+    else:
+        eventsEnb = False
     radius = maxArmLength * scale
     halfRadius = radius / 2
     sGBLx = -10 * scale - 1
@@ -154,7 +159,7 @@ def createLayout():
                   graph_bottom_left=(-radius, -radius),
                   graph_top_right=(radius, radius),
                   background_color='white',
-                  enable_events=True,
+                  enable_events=eventsEnb,
                   key='graph'), data_column, input_column
          ]]
 
@@ -162,28 +167,34 @@ def createLayout():
 
 
 def updateInfo(allMInfo, griX, griY, griZ):
-    window['_currentCoords_'].update("Current Coordinates: X:{}, Y:{}, Z:{}".format(int(griX), int(griY), int(griZ)))
-    window['_mOneRPS_'].update("Motor 1 RPS: {}".format(allMInfo[0][3]))
-    window['_mTwoRPS_'].update("Motor 2 RPS: {}".format(allMInfo[1][3]))
-    window['_mThreeRPS_'].update("Motor 3 RPS: {}".format(allMInfo[2][3]))
-    window['_mFourRPS_'].update("Motor 4 RPS: {}".format(allMInfo[3][3]))
-    window['_mFiveRPS_'].update("Motor 5 RPS: {}".format(allMInfo[4][3]))
-    window['_mSixRPS_'].update("Motor 6 RPS: {}".format(allMInfo[5][3]))
-    window['_mOneAngle_'].update("Motor 1 Angle: {}".format(allMInfo[0][1]))
-    window['_mTwoAngle_'].update("Motor 2 Angle: {}".format(allMInfo[1][1]))
-    window['_mThreeAngle_'].update("Motor 3 Angle: {}".format(allMInfo[2][1]))
-    window['_mFourAngle_'].update("Motor 4 Angle: {}".format(allMInfo[3][1]))
-    window['_mFiveAngle_'].update("Motor 5 Angle: {}".format(allMInfo[4][1]))
-    window['_mSixAngle_'].update("Motor 6 Angle: {}".format(allMInfo[5][1]))
+    try:
+        window['_currentCoords_'].update("Current Coordinates: X:{}, Y:{}, Z:{}".format(int(griX), int(griY), int(griZ)))
+        window['_mOneRPS_'].update("Motor 1 RPS: {}".format(allMInfo[0][3]))
+        window['_mTwoRPS_'].update("Motor 2 RPS: {}".format(allMInfo[1][3]))
+        window['_mThreeRPS_'].update("Motor 3 RPS: {}".format(allMInfo[2][3]))
+        window['_mFourRPS_'].update("Motor 4 RPS: {}".format(allMInfo[3][3]))
+        window['_mFiveRPS_'].update("Motor 5 RPS: {}".format(allMInfo[4][3]))
+        window['_mSixRPS_'].update("Motor 6 RPS: {}".format(allMInfo[5][3]))
+        window['_mOneAngle_'].update("Motor 1 Angle: {}".format(allMInfo[0][1]))
+        window['_mTwoAngle_'].update("Motor 2 Angle: {}".format(allMInfo[1][1]))
+        window['_mThreeAngle_'].update("Motor 3 Angle: {}".format(allMInfo[2][1]))
+        window['_mFourAngle_'].update("Motor 4 Angle: {}".format(allMInfo[3][1]))
+        window['_mFiveAngle_'].update("Motor 5 Angle: {}".format(allMInfo[4][1]))
+        window['_mSixAngle_'].update("Motor 6 Angle: {}".format(allMInfo[5][1]))
+    except:
+        pass
 
 
-def inputLoop(mode, cx, cy):
-    pass
+def inputLoop():
+    while True:
+        try:
+            handler.eventLoop()
+        except:
+            pass
 
 
 def UpdateLoop():
     while True:
-
         allMInfo = mainLoop(coords, endEffector)
 
         for i in range(6):
@@ -196,6 +207,7 @@ def UpdateLoop():
         updateGraphShapes(corMidX, corMidY, corEndX, corEndY, corGriX, corGriY)
         updateSideShapes(corMidDis, corMidZ, corEndDis, corEndZ, corGriDis, corGriZ)
         updateInfo(allMInfo, griX, griY, griZ)
+
 
 
 class GUIWindow:
@@ -213,119 +225,129 @@ class GUIWindow:
 
 
 if __name__ == '__main__':
-    window, graph, side, coordText = GUIWindow(windowTitle, createLayout()).createNewWindow()
+    window, graph, side, coordText = GUIWindow(windowTitle, createLayout(handler.mode)).createNewWindow()
     wristS, shoulderS, elbowS, gripperS, segmentOneS, segmentTwoS, segmentThreeS = createSideShapes()
     wristG, target, elbowG, gripperG, segmentOneG, segmentTwoG, segmentThreeG = createGraphShapes()
     inputLp = threading.Thread(target=inputLoop, args=(), daemon=True)
     update = threading.Thread(target=UpdateLoop, args=(), daemon=True)
     inputLp.start()
     update.start()
-    handler = inputHandler()
     while True:
-        event, values = window.read()
-        if event == sg.WIN_CLOSED or event == 'Exit':
-            break
-        elif event == '4::4':
-            config.set('DEFAULT', 'windowscale', '4')
-            with open('settings.ini', 'w') as configfile:
-                config.write(configfile)
-            scale = int(config['DEFAULT']['windowscale'])
-            window.close()
-            window, graph, side, coordText = GUIWindow(windowTitle, createLayout()).createNewWindow()
-            createGraphShapes()
-            createSideShapes()
-        elif event == '5::5':
-            config.set('DEFAULT', 'windowscale', '5')
-            with open('settings.ini', 'w') as configfile:
-                config.write(configfile)
-            scale = int(config['DEFAULT']['windowscale'])
-            window.close()
-            window, graph, side, coordText = GUIWindow(windowTitle, createLayout()).createNewWindow()
-            createGraphShapes()
-            createSideShapes()
-        elif event == '6::6':
-            config.set('DEFAULT', 'windowscale', '6')
-            with open('settings.ini', 'w') as configfile:
-                config.write(configfile)
-            scale = int(config['DEFAULT']['windowscale'])
-            window.close()
-            window, graph, side, coordText = GUIWindow(windowTitle, createLayout()).createNewWindow()
-            createGraphShapes()
-            createSideShapes()
-        elif event == '7::7':
-            config.set('DEFAULT', 'windowscale', '7')
-            with open('settings.ini', 'w') as configfile:
-                config.write(configfile)
-            scale = int(config['DEFAULT']['windowscale'])
-            window.close()
-            window, graph, side, coordText = GUIWindow(windowTitle, createLayout()).createNewWindow()
-            createGraphShapes()
-            createSideShapes()
-        elif event == '8::8':
-            config.set('DEFAULT', 'windowscale', '8')
-            with open('settings.ini', 'w') as configfile:
-                config.write(configfile)
-            scale = int(config['DEFAULT']['windowscale'])
-            window.close()
-            window, graph, side, coordText = GUIWindow(windowTitle, createLayout()).createNewWindow()
-            createGraphShapes()
-            createSideShapes()
-        elif event == '9::9':
-            config.set('DEFAULT', 'windowscale', '9')
-            with open('settings.ini', 'w') as configfile:
-                config.write(configfile)
-            scale = int(config['DEFAULT']['windowscale'])
-            window.close()
-            window, graph, side, coordText = GUIWindow(windowTitle, createLayout()).createNewWindow()
-            createGraphShapes()
-            createSideShapes()
-        elif event == '10::10':
-            config.set('DEFAULT', 'windowscale', '10')
-            with open('settings.ini', 'w') as configfile:
-                config.write(configfile)
-            scale = int(config['DEFAULT']['windowscale'])
-            window.close()
-            window, graph, side, coordText = GUIWindow(windowTitle, createLayout()).createNewWindow()
-            createGraphShapes()
-            createSideShapes()
-        elif event == 'Mouse':
-            config.set('DEFAULT', 'controllermode', 'Mouse')
-            with open('settings.ini', 'w') as configfile:
-                config.write(configfile)
-            handler.mode = "Mouse"
-        elif event == 'Controller':
-            config.set('DEFAULT', 'controllermode', 'Controller')
-            with open('settings.ini', 'w') as configfile:
-                config.write(configfile)
-            handler.mode = "Controller"
-            handler.getGamepad()
         try:
-            handlerReturn = handler.eventLoop()
-            controllerMode = config['DEFAULT']['controllermode']
-            windowTitle = "{} - [{}]".format(config['DEFAULT']['windowTitle'], controllerMode)
-            window.TKroot.title(windowTitle)
-            if config['DEFAULT']['controllermode'] == "Controller":
-                global newX
-                global newY
-                print("Controller")
-                contX, contY = x, y
-                x, y = newX, newY
-                z = int(values['_coordInput_'])
-                circleUpdate(x, y)
-            elif config['DEFAULT']['controllermode'] == "Mouse":
-                print("Mouse")
-                x = values['graph'][0]
-                y = values['graph'][1]
-                z = int(values['_coordInput_'])
-                circleUpdate(x, y)
-            else:
-                sg.popup_error("Input error.")
-                continue
-            coordinates = "X:{}, Y:{}, Z:{}".format(int(x / scale), int(y / scale), z)
-            coords = [x / scale, y / scale, z]
-            endEffector = [int(values['_endEffHori_']), int(values['_endEffVert_']), int(values['_gripperRotation_'])]
-            coordText.update("Target Coordinates:  {}".format(coordinates))
+            event, values = window.read()
+            if event == sg.WIN_CLOSED or event == 'Exit':
+                break
+            elif event == '4::4':
+                config.set('DEFAULT', 'windowscale', '4')
+                with open('settings.ini', 'w') as configfile:
+                    config.write(configfile)
+                scale = int(config['DEFAULT']['windowscale'])
+                window.close()
+                window, graph, side, coordText = GUIWindow(windowTitle, createLayout(handler.mode)).createNewWindow()
+                createGraphShapes()
+                createSideShapes()
+            elif event == '5::5':
+                config.set('DEFAULT', 'windowscale', '5')
+                with open('settings.ini', 'w') as configfile:
+                    config.write(configfile)
+                scale = int(config['DEFAULT']['windowscale'])
+                window.close()
+                window, graph, side, coordText = GUIWindow(windowTitle, createLayout(handler.mode)).createNewWindow()
+                createGraphShapes()
+                createSideShapes()
+            elif event == '6::6':
+                config.set('DEFAULT', 'windowscale', '6')
+                with open('settings.ini', 'w') as configfile:
+                    config.write(configfile)
+                scale = int(config['DEFAULT']['windowscale'])
+                window.close()
+                window, graph, side, coordText = GUIWindow(windowTitle, createLayout(handler.mode)).createNewWindow()
+                createGraphShapes()
+                createSideShapes()
+            elif event == '7::7':
+                config.set('DEFAULT', 'windowscale', '7')
+                with open('settings.ini', 'w') as configfile:
+                    config.write(configfile)
+                scale = int(config['DEFAULT']['windowscale'])
+                window.close()
+                window, graph, side, coordText = GUIWindow(windowTitle, createLayout(handler.mode)).createNewWindow()
+                createGraphShapes()
+                createSideShapes()
+            elif event == '8::8':
+                config.set('DEFAULT', 'windowscale', '8')
+                with open('settings.ini', 'w') as configfile:
+                    config.write(configfile)
+                scale = int(config['DEFAULT']['windowscale'])
+                window.close()
+                window, graph, side, coordText = GUIWindow(windowTitle, createLayout(handler.mode)).createNewWindow()
+                createGraphShapes()
+                createSideShapes()
+            elif event == '9::9':
+                config.set('DEFAULT', 'windowscale', '9')
+                with open('settings.ini', 'w') as configfile:
+                    config.write(configfile)
+                scale = int(config['DEFAULT']['windowscale'])
+                window.close()
+                window, graph, side, coordText = GUIWindow(windowTitle, createLayout(handler.mode)).createNewWindow()
+                createGraphShapes()
+                createSideShapes()
+            elif event == '10::10':
+                config.set('DEFAULT', 'windowscale', '10')
+                with open('settings.ini', 'w') as configfile:
+                    config.write(configfile)
+                scale = int(config['DEFAULT']['windowscale'])
+                window.close()
+                window, graph, side, coordText = GUIWindow(windowTitle, createLayout(handler.mode)).createNewWindow()
+                createGraphShapes()
+                createSideShapes()
+            elif event == 'Mouse':
+                config.set('DEFAULT', 'controllermode', 'Mouse')
+                with open('settings.ini', 'w') as configfile:
+                    config.write(configfile)
+                handler.mode = "Mouse"
+                window.close()
+                window, graph, side, coordText = GUIWindow(windowTitle, createLayout(handler.mode)).createNewWindow()
+                createGraphShapes()
+                createSideShapes()
+            elif event == 'Controller':
+                config.set('DEFAULT', 'controllermode', 'Controller')
+                with open('settings.ini', 'w') as configfile:
+                    config.write(configfile)
+                handler.mode = "Controller"
+                handler.getGamepad()
+                window.close()
+                window, graph, side, coordText = GUIWindow(windowTitle, createLayout(handler.mode)).createNewWindow()
+                createGraphShapes()
+                createSideShapes()
+            try:
+                handlerReturn = handler.eventLoop()
+                controllerMode = config['DEFAULT']['controllermode']
+                windowTitle = "{} - [{}]".format(config['DEFAULT']['windowTitle'], controllerMode)
+                window.TKroot.title(windowTitle)
+                if config['DEFAULT']['controllermode'] == "Controller":
+                    global newX
+                    global newY
+                    print("Controller")
+                    contX, contY = x, y
+                    x, y = newX, newY
+                    z = int(values['_coordInput_'])
+                    circleUpdate(x, y)
+                elif config['DEFAULT']['controllermode'] == "Mouse":
+                    print("Mouse")
+                    x = values['graph'][0]
+                    y = values['graph'][1]
+                    z = int(values['_coordInput_'])
+                    circleUpdate(x, y)
+                else:
+                    sg.popup_error("Input error.")
+                    continue
+                coordinates = "X:{}, Y:{}, Z:{}".format(int(x / scale), int(y / scale), z)
+                coords = [x / scale, y / scale, z]
+                endEffector = [int(values['_endEffHori_']), int(values['_endEffVert_']), int(values['_gripperRotation_'])]
+                coordText.update("Target Coordinates:  {}".format(coordinates))
+            except:
+                pass
         except:
             pass
 
-    window.close()
+window.close()

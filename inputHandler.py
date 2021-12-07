@@ -9,14 +9,17 @@ class inputHandler:
     mode = config['DEFAULT']['controllermode']
 
     def __init__(self):
-        self.events = None
+        try:
+            self.events = get_gamepad()
+        except:
+            self.events = None
 
     def getGamepad(self):
         retry = True
         while retry:
             try:
-                print("Try get_gamepad.")
                 self.events = get_gamepad()
+                print("Try get_gamepad.")
                 retry = False
             except:
                 choice = sg.Window('ERROR', [[sg.T('Gamepad not found, set to mouse mode.')],
@@ -39,8 +42,9 @@ class inputHandler:
             return 'mouse'
         elif self.mode == "Controller":
             # print("Interpret gamepad inputs.")
+            self.getGamepad()
             for event in self.events:
-                print(event.ev_type, event.code, event.ev_state)
+                print(event.ev_type, event.code, event.state)
                 return 'controller'
 
 
