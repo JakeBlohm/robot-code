@@ -89,19 +89,19 @@ def endMotors(xF, yF, zF, GR, mOneTAngle, mTwoTAngle, mThreeTAngle):
         mFourTAngle = 0
     
     print(z)
-    mFiveTAngle = cah(None, z, END_EFFECTOR_OFFSET)
+    mFiveTAngle = cah(None, y, END_EFFECTOR_OFFSET)
     mSixTAngle = GR - mFourTAngle
     return mFourTAngle, mFiveTAngle, mSixTAngle
 
 
-def MotorAngleCalc(x, y, z, xO, yO, zO, eH, eV, gR):
+def MotorAngleCalc(x, y, z, xEnd, yEnd, zEnd, eH, eV, gR):
     global lastAngles
     mOneTAngle = mRotCalc(x, y)
     try:
         tarDistance = pT(x, y, z)
         mTwoTAngle = 90 - (soh(None, z, tarDistance) + cosrl(None, SEGMENT_ONE, tarDistance, SEGMENT_TWO))
         mThreeTAngle = 180 - cosrl(None, SEGMENT_TWO, SEGMENT_ONE, tarDistance)
-        mFourTAngle, mFiveTAngle, mSixTAngle = endMotors(xO, yO, zO, gR, mOneTAngle, mTwoTAngle, mThreeTAngle)
+        mFourTAngle, mFiveTAngle, mSixTAngle = endMotors(xEnd, yEnd, zEnd, gR, mOneTAngle, mTwoTAngle, mThreeTAngle)
         lastAngles = [mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle]
         return [mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle]
     except:
@@ -116,11 +116,11 @@ def AllMotorCalc(coords, endEffector):
         Temp = (END_EFFECTOR_OFFSET * math.cos(math.radians(endEffector[1])))
         if endEffector[0] < 0:
             Temp = Temp
-        x = coords[0] - (soh(endEffector[0], None, Temp))
-        y = coords[1] - (cah(endEffector[0], None, Temp))
-        z = coords[2] - (END_EFFECTOR_OFFSET * math.sin(math.radians(endEffector[1])))
-        xO, yO, zO = coords[0] - x, coords[1] - y, coords[2] - z
-        allMTAngle = MotorAngleCalc(x, y, z, xO, yO, zO, endEffector[0], endEffector[1], endEffector[2])
+        xEnd = (soh(endEffector[0], None, Temp))
+        yEnd = (cah(endEffector[0], None, Temp))
+        zEnd = (soh(endEffector[1], None, END_EFFECTOR_OFFSET))
+        x, y, z = coords[0] - xEnd, coords[1] - yEnd, coords[2] - zEnd
+        allMTAngle = MotorAngleCalc(x, y, z, xEnd, yEnd, zEnd, endEffector[0], endEffector[1], endEffector[2])
         lastCoords = coords
         return allMTAngle
     else:
