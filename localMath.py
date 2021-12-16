@@ -35,7 +35,10 @@ def toa(ang, opp, adj):
     elif adj is None:
         ans = opp / math.tan(math.radians(ang))
     elif ang is None:
-        ans = math.degrees(math.atan(opp / adj))
+        if adj != 0:
+            ans = math.degrees(math.atan(opp / adj))
+        else:
+            ans = 90
     else:
         print("Could not find missing data")
     return ans

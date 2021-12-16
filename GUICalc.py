@@ -16,34 +16,33 @@ def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle, mFourCAngle, mFiveCAngle, mSixCA
         midX = soh(mOneCAngle, None, midDis)
         midY = cah(mOneCAngle, None, midDis)
         midZ = cah(mTwoCAngle, None, SEGMENT_ONE)
+
+        yF = cah(mFiveCAngle,None,END_EFFECTOR_OFFSET)
+
+        hyp = soh(mFiveCAngle,None,END_EFFECTOR_OFFSET)
+
+        xF = soh(mFourCAngle,None,hyp)
+        zF = cah(mFourCAngle,None,hyp)
         
-        tempDis = soh(mFiveCAngle, None, SEGMENT_THREE)
+        hyp = pT(xF,yF)
 
-        griZF = cah(mFiveCAngle, None, END_EFFECTOR_OFFSET)
-        griXF = cah(mFourCAngle, None, tempDis)
-        griYF = cah(mFiveCAngle, None, SEGMENT_THREE)
-        
-        
+        ang = mOneCAngle - soh(None,xF,hyp)
 
-        h = pT(griXF, griYF)
-        angle = mOneCAngle - soh(None, griXF, h)
-        griX = soh(angle, None, h)
-        griY = cah(angle, None, h)
-        if angle < 0:
-           girX = -griX
-           griY = -griY
-           
-        griDisF = h
-        h = pT(griZF, griDisF)
-        angle = ((180-mThreeCAngle)- mTwoCAngle) - soh(None, griZF, h)
-        griZ = soh(angle, None, h)
-        if angle < 0:
-           girZ = -griZ
+        griX = soh(ang,None,hyp)
+        griY = cah(ang,None,hyp)
+    
+        hyp = pT(xF,yF,zF)
+        ang = (mThreeCAngle - mTwoCAngle) - soh(None,zF,hyp)
 
-        griDis = pT(griX, griY, griZ) + curDistance
+        griZ = soh(ang,None,hyp)
 
-        return x, y, z, curDistance, midDis, midX, midY, midZ, griX + x, griY + y, griZ + z, griDis
+        griDis = yF
+
+        print(griX,griY,griZ)
+
+        return x, y, z, curDistance, midDis, midX, midY, midZ, griX + x, griY + y, griZ + z, griDis + curDistance
     except:
+        print("GUI Math Error")
         return 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
 
