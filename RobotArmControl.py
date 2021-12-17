@@ -42,7 +42,7 @@ allMotors =[motorOne, motorTwo, motorThree, motorFour, motorFive, motorSix]
 
 #Main Loop
 
-def mainLoop(coords,endEffector):
+def calcLoop(coords,endEffector):
     global allMCAngle
 
     coords = CoordsValidation(coords)

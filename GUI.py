@@ -3,6 +3,8 @@ import math
 import PySimpleGUI as sg
 import configparser
 import threading
+from GUICalc import GUIUpdate
+from RobotArmControl import calcLoop
 
 config = configparser.ConfigParser()
 config.read('settings.ini')
@@ -10,8 +12,16 @@ scale = int(config['DEFAULT']['windowscale'])
 
 
 def mainLoop():
+    allMCAngle = [0, 0, 0, 0, 0, 0]
     while True:
-        break
+        allMInfo = calcLoop(coords, endEffector)
+        for i in range(6):
+            allMCAngle[i] = allMInfo[i][1]
+
+        wristX, wristY, wristZ, wristDis, elbowDis, elbowX, elbowY, elbowZ, gripperX, gripperY, gripperZ, gripperDis= GUIUpdate(allMCAngle)
+        
+        windowFrame.updateTopView(wristX, wristY, elbowX, elbowY, gripperX, gripperY)
+        windowFrame.updateSideView(wristDis, wristZ, elbowDis, elbowZ, gripperDis, gripperZ)
 
 
 def createLayout():
