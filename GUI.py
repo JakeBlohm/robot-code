@@ -14,7 +14,7 @@ scale = int(config['DEFAULT']['windowscale'])
 def mainLoop():
     allMCAngle = [0, 0, 0, 0, 0, 0]
     while True:
-        allMInfo = calcLoop(coords, endEffector)
+        allMInfo = calcLoop(windowFrame.coords, windowFrame.endEffector)
         for i in range(6):
             allMCAngle[i] = allMInfo[i][1]
 
@@ -134,6 +134,8 @@ class mainWindowFrame:
         self.target = None
         self.xVis = None
         self.yVis = None
+        self.coords = [0, 0, 0]
+        self.endEffector = [0, 0, 0]
         self.windowName = windowName
         self.layout = layout
         self.window = sg.Window(self.windowName, self.layout, finalize=True)
@@ -238,6 +240,8 @@ if __name__ == '__main__':
         zM = int(values['__coordInput__'])
         print(math.sqrt(0))
         coordinates = "X:{}, Y:{}, Z:{}".format(int(xM / scale), int(yM / scale), zM)
+        windowFrame.coords = [xM/scale, yM/scale, zM]
+        windowFrame.endEffector = [int(values['__endEffHori__']), int(values['__endEffVert__']), int(values['__gripperRotation__'])]
         windowFrame.window['__targetCoords__'].update("{}".format(coordinates))
         windowFrame.clickUpdate(xM, yM)
 
