@@ -73,24 +73,26 @@ def mRotCalc(a, b):
 
 
 def endMotors(xF, yF, zF, GR, mOneTAngle, mTwoTAngle, mThreeTAngle):
-    h = pT(xF, yF)
-    angle = mOneTAngle - soh(None, xF, h)
-    x = soh(angle, None, h)
-    y = cah(angle, None, h)
-    d = h
-    h = pT(zF, d)
-    angle = ((180 - mThreeTAngle) - mTwoTAngle) - soh(None, zF, h)
-    z = soh(angle, None, h)
-    print("XF: {} YF: {} ZF: {}".format(xF,yF,zF))
-    print("X: {} Y: {} Z: {}".format(x,y,z))
-    if round(z, 0) != 0:
-        mFourTAngle = mRotCalc(d, z)
-    else:
-        mFourTAngle = 0
     
-    print(z)
-    mFiveTAngle = cah(None, y, END_EFFECTOR_OFFSET)
-    mSixTAngle = GR - mFourTAngle
+
+    print(xF,yF,zF)
+    hyp = pT(xF,yF)
+    ang = mOneTAngle - soh(None,xF,hyp)
+
+    x = soh(ang,None,hyp)
+    y = cah(ang,None,hyp)
+    
+    hyp = pT(xF,yF,zF)
+    ang = (mThreeTAngle - mTwoTAngle) - soh(None,zF,hyp)
+
+    z = soh(ang,None,hyp)
+    
+    mFourTAngle = toa(None,x,z)
+    mFiveTAngle = cah(None,y,END_EFFECTOR_OFFSET)
+    mSixTAngle = -mFourTAngle
+    if mFourTAngle < 0:
+        mFourTAngle = -mFourTAngle
+    print(mFourTAngle,mFiveTAngle)
     return mFourTAngle, mFiveTAngle, mSixTAngle
 
 
