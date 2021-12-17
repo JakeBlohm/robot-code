@@ -22,6 +22,7 @@ def mainLoop():
         
         windowFrame.updateTopView(wristX, wristY, elbowX, elbowY, gripperX, gripperY)
         windowFrame.updateSideView(wristDis, wristZ, elbowDis, elbowZ, gripperDis, gripperZ)
+        windowFrame.updateMotorInfo(gripperX, gripperY, gripperZ, allMInfo)
 
 
 def createLayout():
@@ -73,12 +74,12 @@ def createLayout():
             [sg.Text("Motor 6 RPS: ", key='__mSixRPSLabel__')]
         ])
         info1 = sg.Column([
-            [sg.Text("{}".format(None), key='__mOneRPS__')],
-            [sg.Text("{}".format(None), key='__mTwoRPS__')],
-            [sg.Text("{}".format(None), key='__mThreeRPS__')],
-            [sg.Text("{}".format(None), key='__mFourRPS__')],
-            [sg.Text("{}".format(None), key='__mFiveRPS__')],
-            [sg.Text("{}".format(None), key='__mSixRPS__')]
+            [sg.Text("{}".format(None), key='__mOneRPS__', size=(5, 1))],
+            [sg.Text("{}".format(None), key='__mTwoRPS__', size=(5, 1))],
+            [sg.Text("{}".format(None), key='__mThreeRPS__', size=(5, 1))],
+            [sg.Text("{}".format(None), key='__mFourRPS__', size=(5, 1))],
+            [sg.Text("{}".format(None), key='__mFiveRPS__', size=(5, 1))],
+            [sg.Text("{}".format(None), key='__mSixRPS__', size=(5, 1))]
         ])
         labels2 = sg.Column([
             [sg.Text("Motor 1 Angle: ", key='__mOneAngleLabel__')],
@@ -89,12 +90,12 @@ def createLayout():
             [sg.Text("Motor 6 Angle: ", key='__mSixAngleLabel__')]
         ])
         info2 = sg.Column([
-            [sg.Text("{}".format(None), key='__mOneAngle__')],
-            [sg.Text("{}".format(None), key='__mTwoAngle__')],
-            [sg.Text("{}".format(None), key='__mThreeAngle__')],
-            [sg.Text("{}".format(None), key='__mFourAngle__')],
-            [sg.Text("{}".format(None), key='__mFiveAngle__')],
-            [sg.Text("{}".format(None), key='__mSixAngle__')]
+            [sg.Text("{}".format(None), key='__mOneAngle__', size=(5, 1))],
+            [sg.Text("{}".format(None), key='__mTwoAngle__', size=(5, 1))],
+            [sg.Text("{}".format(None), key='__mThreeAngle__', size=(5, 1))],
+            [sg.Text("{}".format(None), key='__mFourAngle__', size=(5, 1))],
+            [sg.Text("{}".format(None), key='__mFiveAngle__', size=(5, 1))],
+            [sg.Text("{}".format(None), key='__mSixAngle__', size=(5, 1))]
         ])
 
         return sg.Column([
@@ -224,6 +225,21 @@ class mainWindowFrame:
         self.side_upperArm = self.sideOn.DrawLine((elbowDis * scale, elbowZ * scale), (wristDis * scale, wristZ * scale))
         self.sideOn.delete_figure(self.side_endEffector)
         self.side_endEffector = self.sideOn.DrawLine((wristDis * scale, wristZ * scale), (gripperDis * scale, gripperZ * scale))
+
+    def updateMotorInfo(self, gripperX, gripperY, gripperZ, allMInfo):
+        self.window['__currentCoords__'].update("X:{}, Y:{}, Z:{}".format(int(gripperX), int(gripperY), int(gripperZ)))
+        self.window['__mOneRPS__'].update("{}".format(allMInfo[0][3]))
+        self.window['__mTwoRPS__'].update("{}".format(allMInfo[1][3]))
+        self.window['__mThreeRPS__'].update("{}".format(allMInfo[2][3]))
+        self.window['__mFourRPS__'].update("{}".format(allMInfo[3][3]))
+        self.window['__mFiveRPS__'].update("{}".format(allMInfo[4][3]))
+        self.window['__mSixRPS__'].update("{}".format(allMInfo[5][3]))
+        self.window['__mOneAngle__'].update("{}".format(allMInfo[0][1]))
+        self.window['__mTwoAngle__'].update("{}".format(allMInfo[1][1]))
+        self.window['__mThreeAngle__'].update("{}".format(allMInfo[2][1]))
+        self.window['__mFourAngle__'].update("{}".format(allMInfo[3][1]))
+        self.window['__mFiveAngle__'].update("{}".format(allMInfo[4][1]))
+        self.window['__mSixAngle__'].update("{}".format(allMInfo[5][1]))
 
 
 if __name__ == '__main__':
