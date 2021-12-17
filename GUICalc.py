@@ -23,21 +23,25 @@ def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle, mFourCAngle, mFiveCAngle, mSixCA
 
         xF = soh(mFourCAngle,None,hyp)
         zF = cah(mFourCAngle,None,hyp)
-        
+
+        print (xF,yF,zF)
+
         hyp = pT(xF,yF)
+
+        if yF < 0:
+            hyp = -hyp
 
         ang = mOneCAngle - soh(None,xF,hyp)
 
         griX = soh(ang,None,hyp)
         griY = cah(ang,None,hyp)
-    
+            
         hyp = pT(xF,yF,zF)
         ang = (mThreeCAngle - mTwoCAngle) - soh(None,zF,hyp)
 
         griZ = soh(ang,None,hyp)
 
-        griDis = yF
-
+        griDis = griY
         print(griX,griY,griZ)
 
         return x, y, z, curDistance, midDis, midX, midY, midZ, griX + x, griY + y, griZ + z, griDis + curDistance

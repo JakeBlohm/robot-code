@@ -74,25 +74,25 @@ def mRotCalc(a, b):
 
 def endMotors(xF, yF, zF, GR, mOneTAngle, mTwoTAngle, mThreeTAngle):
     
-
     print(xF,yF,zF)
     hyp = pT(xF,yF)
     ang = mOneTAngle - soh(None,xF,hyp)
 
     x = soh(ang,None,hyp)
     y = cah(ang,None,hyp)
-    
+        
     hyp = pT(xF,yF,zF)
     ang = (mThreeTAngle - mTwoTAngle) - soh(None,zF,hyp)
 
     z = soh(ang,None,hyp)
-    
+
     mFourTAngle = toa(None,x,z)
     mFiveTAngle = cah(None,y,END_EFFECTOR_OFFSET)
     mSixTAngle = -mFourTAngle
-    if mFourTAngle < 0:
-        mFourTAngle = -mFourTAngle
-    print(mFourTAngle,mFiveTAngle)
+
+    if x < 0:
+        mFiveTAngle = -mFiveTAngle
+        
     return mFourTAngle, mFiveTAngle, mSixTAngle
 
 
