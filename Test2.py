@@ -9,25 +9,26 @@ mThreeTAngle = 0
 END_EFFECTOR_OFFSET = 10
 good, bad = 0, 0
 
-for w in range(18):
-    mThreeTAngle = w*10 - 90
-    for i in range(36):
-        mOneTAngle = i*10 - 180
+for w in range(180):
+    mThreeTAngle = w - 90
+    for i in range(360):
+        mOneTAngle = i - 180
         xF = 0
-        yF = 10
-        zF = 0
-
+        yF = 0
+        zF = 10
+        
         print(xF,yF,zF)
+
         hyp = pT(xF,yF)
         ang = mOneTAngle - soh(None,xF,hyp)
 
         x = soh(ang,None,hyp)
         y = cah(ang,None,hyp)
             
-        hyp = pT(xF,yF,zF)
-        ang = (mThreeTAngle - mTwoTAngle) - soh(None,zF,hyp)
+        xy = round(pT(x,y),8)
 
-        z = soh(ang,None,hyp)
+        ang = cah(None, xy, END_EFFECTOR_OFFSET)
+        z = soh(ang, None, END_EFFECTOR_OFFSET)
 
         mFourTAngle = toa(None,x,z)
         mFiveTAngle = cah(None,y,END_EFFECTOR_OFFSET)
@@ -66,14 +67,13 @@ for w in range(18):
         griX = soh(ang,None,hyp)
         griY = cah(ang,None,hyp)
             
-        hyp = pT(xF,yF,zF)
-        ang = (mThreeCAngle - mTwoCAngle) - soh(None,zF,hyp)
+        griXY = round(pT(griX,griY),8)
 
-
-        griZ = soh(ang,None,hyp)
+        ang = cah(None, griXY, END_EFFECTOR_OFFSET)
+        griZ = soh(ang, None, END_EFFECTOR_OFFSET)
 
         griDis = griY
-        print(griX,griY,griZ)
+        print(round(griX,8),round(griY,8),round(griZ,8))
         if round(griX,8) == 0 and round(griY,8) == 10 and round(griZ,8) == 0:
             print("GOOD they are the same like they should be at {}, {}".format(mOneTAngle,mThreeTAngle))
             good += 1

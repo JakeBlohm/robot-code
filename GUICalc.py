@@ -19,14 +19,9 @@ def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle, mFourCAngle, mFiveCAngle, mSixCA
 
         yF = cah(mFiveCAngle,None,END_EFFECTOR_OFFSET)
 
-        hyp = soh(mFiveCAngle,None,END_EFFECTOR_OFFSET)
+        xF = soh(mFiveCAngle,None,END_EFFECTOR_OFFSET)
 
-        xF = soh(mFourCAngle,None,hyp)
-        zF = cah(mFourCAngle,None,hyp)
-
-        print (xF,yF,zF)
-
-        hyp = pT(xF,yF)
+        hyp = pT(xF,yF) 
 
         if yF < 0:
             hyp = -hyp
@@ -36,13 +31,12 @@ def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle, mFourCAngle, mFiveCAngle, mSixCA
         griX = soh(ang,None,hyp)
         griY = cah(ang,None,hyp)
             
-        hyp = pT(xF,yF,zF)
-        ang = (mThreeCAngle - mTwoCAngle) - soh(None,zF,hyp)
+        griXY = pT(griX,griY)
 
-        griZ = soh(ang,None,hyp)
+        ang = cah(None, griXY, END_EFFECTOR_OFFSET)
+        griZ = soh(ang, None, END_EFFECTOR_OFFSET)
 
         griDis = griY
-        print(griX,griY,griZ)
 
         return x, y, z, curDistance, midDis, midX, midY, midZ, griX + x, griY + y, griZ + z, griDis + curDistance
     except:
