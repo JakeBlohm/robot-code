@@ -1,4 +1,3 @@
-import random
 import math
 import PySimpleGUI as sg
 import configparser
@@ -9,6 +8,11 @@ from RobotArmControl import calcLoop
 config = configparser.ConfigParser()
 config.read('settings.ini')
 scale = int(config['DEFAULT']['windowscale'])
+controllerMode = config['DEFAULT']['controllermode'] == 'True'
+if controllerMode:
+    windowTitle = config['DEFAULT']['windowTitle'] + " (Controller)"
+else:
+    windowTitle = config['DEFAULT']['windowTitle'] + " (Mouse)"
 
 
 def mainLoop():
@@ -32,6 +36,9 @@ def createLayout():
     side_size = ((60 * scale) + (30 * scale), (60 * scale) + (0 * scale) + (5 * scale))
     side_bottomLeft = ((-30 * scale), (-0 * scale) - (5 * scale))
     side_topRight = ((60 * scale), (60 * scale))
+    menu = sg.Menu(
+        [["File", ["Settings", ["Scale", ["3::3", "4::4", "5::5", "6::6"], ["Mode", ["Mouse", "Controller"]]], "Exit"]]])
+
     leftColumn = sg.Column([
         [sg.Graph(canvas_size=top_size,
                   graph_bottom_left=top_bottomLeft,
@@ -113,7 +120,7 @@ def createLayout():
                   key='__sideOn__')]
     ], element_justification='center')
 
-    layout = [[leftColumn, middleColumn]]
+    layout = [[menu],[leftColumn, middleColumn]]
     return layout
 
 
@@ -166,6 +173,7 @@ class mainWindowFrame:
         self.top_elbow = self.topDown.DrawCircle((0, 0), scale * 1.5, fill_color='black', line_color='black')
         self.top_wrist = self.topDown.DrawCircle((0, 0), scale * 1.5, fill_color='red', line_color='black')
         self.top_gripper = self.topDown.DrawCircle((0, 0), scale * 1.5, fill_color='green', line_color='black')
+        self.topDown.Widget.config(cursor='circle')
 
     def initSideOn(self):
         sDisAxis = self.sideOn.DrawLine(((-60 * scale), 0), ((60 * scale), 0))
@@ -243,7 +251,7 @@ class mainWindowFrame:
 
 
 if __name__ == '__main__':
-    windowFrame = mainWindowFrame("Arm Visualiser", createLayout())
+    windowFrame = mainWindowFrame(windowTitle, createLayout())
     topDown = windowFrame.topDown
     update = threading.Thread(target=mainLoop, args=(), daemon=True)
     update.start()
@@ -251,14 +259,62 @@ if __name__ == '__main__':
         event, values = windowFrame.window.read()
         if event == sg.WIN_CLOSED:
             break
-        xM = values['__topDown__'][0]
-        yM = values['__topDown__'][1]
-        zM = int(values['__coordInput__'])
-        print(math.sqrt(0))
-        coordinates = "X:{}, Y:{}, Z:{}".format(int(xM / scale), int(yM / scale), zM)
-        windowFrame.coords = [xM/scale, yM/scale, zM]
-        windowFrame.endEffector = [int(values['__endEffHori__']), int(values['__endEffVert__']), int(values['__gripperRotation__'])]
-        windowFrame.window['__targetCoords__'].update("{}".format(coordinates))
-        windowFrame.clickUpdate(xM, yM)
+        elif event == '3::3':
+            config.set('DEFAULT', 'windowscale', '3')
+            with open('settings.ini', 'w') as configfile:
+                config.write(configfile)
+            scale = int(config['DEFAULT']['windowscale'])
+            windowFrame.window.close()
+            windowFrame = mainWindowFrame(windowTitle, createLayout())
+        elif event == '4::4':
+            config.set('DEFAULT', 'windowscale', '4')
+            with open('settings.ini', 'w') as configfile:
+                config.write(configfile)
+            scale = int(config['DEFAULT']['windowscale'])
+            windowFrame.window.close()
+            windowFrame = mainWindowFrame(windowTitle, createLayout())
+        elif event == '5::5':
+            config.set('DEFAULT', 'windowscale', '5')
+            with open('settings.ini', 'w') as configfile:
+                config.write(configfile)
+            scale = int(config['DEFAULT']['windowscale'])
+            windowFrame.window.close()
+            windowFrame = mainWindowFrame(windowTitle, createLayout())
+        elif event == '6::6':
+            config.set('DEFAULT', 'windowscale', '6')
+            with open('settings.ini', 'w') as configfile:
+                config.write(configfile)
+            scale = int(config['DEFAULT']['windowscale'])
+            windowFrame.window.close()
+            windowFrame = mainWindowFrame(windowTitle, createLayout())
+        elif event == 'Mouse':
+            config.set('DEFAULT', 'controllermode', 'False')
+            with open('settings.ini', 'w') as configfile:
+                config.write(configfile)
+            controllerMode = config['DEFAULT']['controllermode']
+            windowTitle = config['DEFAULT']['windowTitle'] + " (Mouse)"
+            windowFrame.window.TKroot.title(windowTitle)
+        elif event == 'Controller':
+            config.set('DEFAULT', 'controllermode', 'True')
+            with open('settings.ini', 'w') as configfile:
+                config.write(configfile)
+            controllerMode = config['DEFAULT']['controllermode']
+            windowTitle = config['DEFAULT']['windowTitle'] + " (Controller)"
+            windowFrame.window.TKroot.title(windowTitle)
+        try:
+            if controllerMode:
+                pass
+            else:
+                xIn = values['__topDown__'][0]
+                yIn = values['__topDown__'][1]
+                zIn = int(values['__coordInput__'])
+                windowFrame.clickUpdate(xIn, yIn)
+
+            coordinates = "X:{}, Y:{}, Z:{}".format(int(xIn / scale), int(yIn / scale), zIn)
+            windowFrame.coords = [xIn/scale, yIn/scale, zIn]
+            windowFrame.endEffector = [int(values['__endEffHori__']), int(values['__endEffVert__']), int(values['__gripperRotation__'])]
+            windowFrame.window['__targetCoords__'].update("{}".format(coordinates))
+        except:
+            print("GUI Exception: Coordinate Error")
 
 windowFrame.window.close()
