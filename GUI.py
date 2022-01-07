@@ -1,4 +1,3 @@
-import math
 import PySimpleGUI as sg
 import configparser
 import threading
