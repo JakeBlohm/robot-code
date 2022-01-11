@@ -1,8 +1,10 @@
 import PySimpleGUI as sg
 import configparser
 import threading
+import time
 from GUICalc import GUIUpdate
 from RobotArmControl import calcLoop
+from controllerHandler import controllerHandler
 
 config = configparser.ConfigParser()
 config.read('settings.ini')
@@ -12,6 +14,23 @@ if controllerMode:
     windowTitle = config['DEFAULT']['windowTitle'] + " (Controller)"
 else:
     windowTitle = config['DEFAULT']['windowTitle'] + " (Mouse)"
+
+
+def controllerLoop():
+    global controllerMode
+    ctrHandler = controllerHandler()
+    while True:
+        if controllerMode:
+            print("try")
+            try:
+                controllerMode = ctrHandler.getController()
+                time.sleep(0.1)
+                print("try get")
+            except RuntimeError:
+                time.sleep(0.1)
+                print("error")
+        else:
+            time.sleep(0.1)
 
 
 def mainLoop():
@@ -248,12 +267,20 @@ class mainWindowFrame:
         self.window['__mFiveAngle__'].update("{}".format(allMInfo[4][1]))
         self.window['__mSixAngle__'].update("{}".format(allMInfo[5][1]))
 
+        if controllerMode:
+            self.window.TKroot.title(config['DEFAULT']['windowTitle'] + " (Controller)")
+        else:
+            self.window.TKroot.title(config['DEFAULT']['windowTitle'] + " (Mouse)")
+
 
 if __name__ == '__main__':
     windowFrame = mainWindowFrame(windowTitle, createLayout())
+    windowFrame.window.BringToFront()
     topDown = windowFrame.topDown
     update = threading.Thread(target=mainLoop, args=(), daemon=True)
     update.start()
+    ctrLoop = threading.Thread(target=controllerLoop, args=(), daemon=True)
+    ctrLoop.start()
     while True:
         event, values = windowFrame.window.read()
         if event == sg.WIN_CLOSED:
@@ -290,19 +317,21 @@ if __name__ == '__main__':
             config.set('DEFAULT', 'controllermode', 'False')
             with open('settings.ini', 'w') as configfile:
                 config.write(configfile)
-            controllerMode = config['DEFAULT']['controllermode']
+            controllerMode = config['DEFAULT']['controllermode'] == 'True'
             windowTitle = config['DEFAULT']['windowTitle'] + " (Mouse)"
             windowFrame.window.TKroot.title(windowTitle)
         elif event == 'Controller':
             config.set('DEFAULT', 'controllermode', 'True')
             with open('settings.ini', 'w') as configfile:
                 config.write(configfile)
-            controllerMode = config['DEFAULT']['controllermode']
+            controllerMode = config['DEFAULT']['controllermode'] == 'True'
             windowTitle = config['DEFAULT']['windowTitle'] + " (Controller)"
             windowFrame.window.TKroot.title(windowTitle)
+
         try:
             if controllerMode:
-                pass
+                xIn = 40 * scale
+                yIn = 22 * scale
             else:
                 xIn = values['__topDown__'][0]
                 yIn = values['__topDown__'][1]
@@ -316,4 +345,7 @@ if __name__ == '__main__':
         except:
             print("GUI Exception: Coordinate Error")
 
+config.set('DEFAULT', 'controllermode', 'False')
+with open('settings.ini', 'w') as configfile:
+    config.write(configfile)
 windowFrame.window.close()
