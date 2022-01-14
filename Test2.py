@@ -1,84 +1,80 @@
-from ArmPositioner import END_EFFECTOR_OFFSET
-from localMath import *
+from inputs import get_gamepad
+import PySimpleGUI as sg
+import threading
+import time
+
+scale = 4
 
 
+class controller:
+    def __init__(self):
+        self.nx = 0
+        self.ny = 0
+        self.cx = 0
+        self.cy = 0
+        self.gamepadXAccel = 0
+        self.gamepadYAccel = 0
+        self.events = None
 
-mOneTAngle = 90
-mTwoTAngle = 0
-mThreeTAngle = 0
-END_EFFECTOR_OFFSET = 10
-good, bad = 0, 0
+    def getGamepadValues(self):
+        self.events = get_gamepad()
+        # print(self.nx, ' | ', self.ny)
 
-for w in range(180):
-    mThreeTAngle = w - 90
-    for i in range(360):
-        mOneTAngle = i - 180
-        xF = 0
-        yF = 0
-        zF = 10
-        
-        print(xF,yF,zF)
-
-        hyp = pT(xF,yF)
-        ang = mOneTAngle - soh(None,xF,hyp)
-
-        x = soh(ang,None,hyp)
-        y = cah(ang,None,hyp)
-            
-        xy = round(pT(x,y),8)
-
-        ang = cah(None, xy, END_EFFECTOR_OFFSET)
-        z = soh(ang, None, END_EFFECTOR_OFFSET)
-
-        mFourTAngle = toa(None,x,z)
-        mFiveTAngle = cah(None,y,END_EFFECTOR_OFFSET)
-        mSixTAngle = -mFourTAngle
-
-        if x < 0:
-            mFiveTAngle = -mFiveTAngle
-        print(x,y,z)
-        print(mFourTAngle,mFiveTAngle)
+        for event in self.events:
+            if event.ev_type == 'Absolute':
+                # print(event.code)
+                if event.code == 'ABS_X':
+                    self.gamepadXAccel = (event.state / 32768) ** 3
+                elif event.code == 'ABS_Y':
+                    self.gamepadYAccel = (event.state / 32768) ** 3
+                # print(self.gamepadXAccel, ' | ', self.gamepadYAccel)
 
 
-        mFiveCAngle = mFiveTAngle
-        mFourCAngle = mFourTAngle
-        mThreeCAngle = mThreeTAngle
-        mTwoCAngle = mTwoTAngle 
-        mOneCAngle = mOneTAngle
+class frame:
+    def __init__(self):
+        self.layout = [[sg.Graph(canvas_size=top_size,
+                                 graph_bottom_left=top_bottomLeft,
+                                 graph_top_right=top_topRight,
+                                 background_color='white',
+                                 enable_events=True,
+                                 key='__topDown__')]]
+        self.window = sg.Window("Gamepad Test", self.layout, finalize=True)
+        self.graph = self.window['__topDown__']
+        self.target = self.graph.DrawCircle((0, 0), 1.5 * scale, fill_color='blue')
 
-        yF = cah(mFiveCAngle,None,END_EFFECTOR_OFFSET)
+    def update(self, xinc, yinc):
+        self.graph.move_figure(self.target, xinc, yinc)
+        # self.graph.delete_figure(self.target)
+        # self.target = self.graph.DrawCircle((nx, ny), 1.5 * scale, fill_color='blue')
 
-        xF = soh(mFiveCAngle,None,END_EFFECTOR_OFFSET)
+
+def gamepad():
+    while True:
+        handler.getGamepadValues()
 
 
-        temp = round((END_EFFECTOR_OFFSET**2-((xF**2)+(yF**2))),8)
+def mainLoop():
+    while True:
+        newFrame.update(scale * handler.gamepadXAccel / 1.5, scale * handler.gamepadYAccel / 1.5)
+        time.sleep(0.01)
 
-        zF = math.sqrt(temp)
 
-        print (xF,yF,zF)
+top_size = ((120 * scale) + (5 * scale), (120 * scale) + (5 * scale))
+top_bottomLeft = ((-60 * scale) - (5 * scale), (-60 * scale) - (5 * scale))
+top_topRight = ((60 * scale) + (5 * scale), (60 * scale) + (5 * scale))
 
-        hyp = pT(xF,yF) 
+handler = controller()
+newFrame = frame()
+window = newFrame.window
+graph = newFrame.graph
+gpThread = threading.Thread(target=gamepad, args=(), daemon=False)
+updateLoop = threading.Thread(target=mainLoop, args=(), daemon=False)
+gpThread.start()
+updateLoop.start()
 
-        if yF < 0:
-            hyp = -hyp
+while True:
+    winevent, values = window.read()
+    if winevent == sg.WIN_CLOSED:
+        break
 
-        ang = mOneCAngle - soh(None,xF,hyp)
-
-        griX = soh(ang,None,hyp)
-        griY = cah(ang,None,hyp)
-            
-        griXY = round(pT(griX,griY),8)
-
-        ang = cah(None, griXY, END_EFFECTOR_OFFSET)
-        griZ = soh(ang, None, END_EFFECTOR_OFFSET)
-
-        griDis = griY
-        print(round(griX,8),round(griY,8),round(griZ,8))
-        if round(griX,8) == 0 and round(griY,8) == 10 and round(griZ,8) == 0:
-            print("GOOD they are the same like they should be at {}, {}".format(mOneTAngle,mThreeTAngle))
-            good += 1
-        else:
-            print("BAD they are not the same at {}, {}".format(mOneTAngle,mThreeTAngle))
-            bad += 1
-
-print("GOODS: {} BADS: {}".format(good, bad))
+window.close()
