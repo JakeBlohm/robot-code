@@ -56,3 +56,8 @@ def cosrl(ang, a, b, c):
         denominator = 2*a*b
         ans = math.degrees(math.acos(numerator/denominator))
     return ans
+
+
+def truncate(num, n):
+    integer = int(num * (10**n)) / (10**n)
+    return float(integer)

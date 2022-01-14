@@ -1,33 +1,29 @@
-from ArmPositioner import END_EFFECTOR_OFFSET
-from localMath import *
-import math
+import PySimpleGUI as sg
 
+layout = [[sg.Graph(canvas_size=(65536/100, 65536/200),
+                    graph_bottom_left=(-32768, -1),
+                    graph_top_right=(32767, 1),
+                    background_color='white',
+                    key='__graph__',
+                    enable_events=True)]]
 
+window = sg.Window("Controller Curve", layout, finalize=True)
+graph = window['__graph__']
 
-mOneTAngle = 90
-mTwoTAngle = 0
-mThreeTAngle = 0
-END_EFFECTOR_OFFSET = 10
-good, bad = 0, 0
+graph.DrawLine((-32768, 0), (32768, 0))
+graph.DrawLine((0, 1), (0, -1))
 
-for w in range(18):
-    mThreeTAngle = w*10 - 90
-    for i in range(36):
-        mOneTAngle = i*10 - 180
-        xF = 0
-        yF = 10
-        zF = 0
+for i in range(-32768, 32769, 1024):
+    if i == 0:
+        pass
+    else:
+        graph.DrawCircle((i, (i/32768)**3), radius=256, fill_color='red')
+        print((i/32768)**3)
 
-        hyp = pT(xF,yF)
-        ang = mOneTAngle - soh(None,xF,hyp)
+while True:
+    event, values = window.read()
+    if event == sg.WIN_CLOSED:
+        break
+    print(values['__graph__'][0], values['__graph__'][1])
 
-        x = soh(ang,None,hyp)
-        y = cah(ang,None,hyp)
-
-        xy = round(pT(x,y),8)
-
-        ang = cah(None, xy, END_EFFECTOR_OFFSET)
-        z = soh(ang, None, END_EFFECTOR_OFFSET)
-
-        print(x, y, z)
-        print(round(pT(x,y,z),8))
+window.close()
