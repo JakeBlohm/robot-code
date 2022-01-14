@@ -42,11 +42,11 @@ allMotors =[motorOne, motorTwo, motorThree, motorFour, motorFive, motorSix]
 
 #Main Loop
 
-def calcLoop(coords,endEffector):
+def calcLoop(coords,endEffector,lastCoords):
     global allMCAngle
 
     coords = CoordsValidation(coords)
-    allMTAngle = AllMotorCalc(coords, endEffector)
+    allMTAngle = AllMotorCalc(coords, endEffector, lastCoords)
     motorOne[0], motorTwo[0], motorThree[0], motorFour[0], motorFive[0], motorSix[0] = allMTAngle
     
     MotorOne.MotorMove(motorOne)

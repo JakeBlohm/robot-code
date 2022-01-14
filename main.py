@@ -292,6 +292,7 @@ def controllerLoop():
 
 def mainLoop():
     allMCAngle = [0, 0, 0, 0, 0, 0]
+    lastCoords = [0, 0, 0]
     while True:
         # print(windowFrame.targetCurrentCoords)
         if controller.controllerMode:
@@ -302,7 +303,12 @@ def mainLoop():
         #Temp fix untill you fix
         if windowFrame.targetCurrentCoords[2] == None:
             windowFrame.targetCurrentCoords[2] = 0
-        allMInfo = calcLoop(windowFrame.targetCurrentCoords, windowFrame.endEffector)
+        allMInfo = calcLoop(windowFrame.targetCurrentCoords, windowFrame.endEffector, lastCoords)
+
+        lastCoords[0] =windowFrame.targetCurrentCoords[0]
+        lastCoords[1] =windowFrame.targetCurrentCoords[1]
+        lastCoords[2] =windowFrame.targetCurrentCoords[2]
+
         #except TypeError:
         #    print("Motor Calculation Error [0x0003a]")
         #    allMInfo = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]

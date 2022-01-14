@@ -13,7 +13,6 @@ global SEGMENT_ONE
 global SEGMENT_TWO
 global BASE_HEIGHT
 global ALL_HORIZONTAL_OFFSET
-global lastCoords
 global lastAngles
 
 # Home/Initial position of the thick arm
@@ -44,7 +43,6 @@ END_EFFECTOR_OFFSET = (SEGMENT_THREE + GRIPPER_OFFSET)
 MAX_ARM_LENGTH = (SEGMENT_ONE + SEGMENT_TWO + SEGMENT_THREE)
 # Memory
 
-lastCoords = [0, 0, 0]
 lastAngles = [0, 0, 0, 0, 0, 0]
 
 
@@ -109,10 +107,8 @@ def MotorAngleCalc(x, y, z, xEnd, yEnd, zEnd, eH, eV, gR):
         return lastAngles
 
 
-def AllMotorCalc(coords, endEffector):
-    global lastCoords
+def AllMotorCalc(coords, endEffector, lastCoords):
     global lastAngles
-    print(coords, lastCoords)
     if coords != lastCoords:
         Temp = (END_EFFECTOR_OFFSET * math.cos(math.radians(endEffector[1])))
         if endEffector[0] < 0:
@@ -122,7 +118,6 @@ def AllMotorCalc(coords, endEffector):
         zEnd = (soh(endEffector[1], None, END_EFFECTOR_OFFSET))
         x, y, z = coords[0] - xEnd, coords[1] - yEnd, coords[2] - zEnd
         allMTAngle = MotorAngleCalc(x, y, z, xEnd, yEnd, zEnd, endEffector[0], endEffector[1], endEffector[2])
-        print("THE COORDS HAVE UPDATED")
         lastCoords = coords
         lastAngles = allMTAngle
         return allMTAngle
