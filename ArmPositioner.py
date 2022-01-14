@@ -74,17 +74,16 @@ def mRotCalc(a, b):
 
 def endMotors(xF, yF, zF, GR, mOneTAngle, mTwoTAngle, mThreeTAngle):
     
-    print(xF,yF,zF)
     hyp = pT(xF,yF)
     ang = mOneTAngle - soh(None,xF,hyp)
 
     x = soh(ang,None,hyp)
     y = cah(ang,None,hyp)
-        
-    hyp = pT(xF,yF,zF)
-    ang = (mThreeTAngle - mTwoTAngle) - soh(None,zF,hyp)
+            
+    xy = round(pT(x,y),8)
 
-    z = soh(ang,None,hyp)
+    ang = cah(None, xy, END_EFFECTOR_OFFSET)
+    z = soh(ang, None, END_EFFECTOR_OFFSET)
 
     mFourTAngle = toa(None,x,z)
     mFiveTAngle = cah(None,y,END_EFFECTOR_OFFSET)
@@ -104,7 +103,6 @@ def MotorAngleCalc(x, y, z, xEnd, yEnd, zEnd, eH, eV, gR):
         mTwoTAngle = 90 - (soh(None, z, tarDistance) + cosrl(None, SEGMENT_ONE, tarDistance, SEGMENT_TWO))
         mThreeTAngle = 180 - cosrl(None, SEGMENT_TWO, SEGMENT_ONE, tarDistance)
         mFourTAngle, mFiveTAngle, mSixTAngle = endMotors(xEnd, yEnd, zEnd, gR, mOneTAngle, mTwoTAngle, mThreeTAngle)
-        lastAngles = [mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle]
         return [mOneTAngle, mTwoTAngle, mThreeTAngle, mFourTAngle, mFiveTAngle, mSixTAngle]
     except:
         print("Nah u Math Bad")
@@ -114,6 +112,7 @@ def MotorAngleCalc(x, y, z, xEnd, yEnd, zEnd, eH, eV, gR):
 def AllMotorCalc(coords, endEffector):
     global lastCoords
     global lastAngles
+    print(coords, lastCoords)
     if coords != lastCoords:
         Temp = (END_EFFECTOR_OFFSET * math.cos(math.radians(endEffector[1])))
         if endEffector[0] < 0:
@@ -123,7 +122,9 @@ def AllMotorCalc(coords, endEffector):
         zEnd = (soh(endEffector[1], None, END_EFFECTOR_OFFSET))
         x, y, z = coords[0] - xEnd, coords[1] - yEnd, coords[2] - zEnd
         allMTAngle = MotorAngleCalc(x, y, z, xEnd, yEnd, zEnd, endEffector[0], endEffector[1], endEffector[2])
+        print("THE COORDS HAVE UPDATED")
         lastCoords = coords
+        lastAngles = allMTAngle
         return allMTAngle
     else:
         return lastAngles

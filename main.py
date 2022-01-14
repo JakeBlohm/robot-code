@@ -299,6 +299,9 @@ def mainLoop():
         elif not controller.controllerMode:
             pass
         #try:
+        #Temp fix untill you fix
+        if windowFrame.targetCurrentCoords[2] == None:
+            windowFrame.targetCurrentCoords[2] = 0
         allMInfo = calcLoop(windowFrame.targetCurrentCoords, windowFrame.endEffector)
         #except TypeError:
         #    print("Motor Calculation Error [0x0003a]")

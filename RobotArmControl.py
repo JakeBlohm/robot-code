@@ -46,9 +46,7 @@ def calcLoop(coords,endEffector):
     global allMCAngle
 
     coords = CoordsValidation(coords)
-
     allMTAngle = AllMotorCalc(coords, endEffector)
-    
     motorOne[0], motorTwo[0], motorThree[0], motorFour[0], motorFive[0], motorSix[0] = allMTAngle
     
     MotorOne.MotorMove(motorOne)
