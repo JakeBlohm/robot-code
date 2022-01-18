@@ -58,9 +58,9 @@ class windowcls:
         self.top_upperArm = None
         self.top_elbow = None
         self.target = None
-        self.mx = None
-        self.my = None
-        self.mz = None
+        self.mx = 0
+        self.my = 0
+        self.mz = 0
         if controller.controllerMode:
             self.windowName = 'Arm Visualiser [Controller]'
         else:
@@ -74,15 +74,15 @@ class windowcls:
     def targetUpdate(self, mx, my, cx, cy, mz):
         if controller.controllerMode:
             self.topDown.move_figure(self.target, cx, cy)
-            self.targetCurrentCoords[0] += cx/scale
-            self.targetCurrentCoords[1] += cy/scale
+            self.targetCurrentCoords[0] += cx / scale
+            self.targetCurrentCoords[1] += cy / scale
             self.targetCurrentCoords[2] = mz
 
         else:
             self.topDown.delete_figure(self.target)
             self.target = self.topDown.DrawCircle((mx, my), scale * 1.5, fill_color='blue', line_color='black')
-            self.targetCurrentCoords[0] = mx/scale
-            self.targetCurrentCoords[1] = my/scale
+            self.targetCurrentCoords[0] = mx / scale
+            self.targetCurrentCoords[1] = my / scale
             self.targetCurrentCoords[2] = mz
 
     def initGraphs(self):
@@ -296,26 +296,28 @@ def mainLoop():
     while True:
         # print(windowFrame.targetCurrentCoords)
         if controller.controllerMode:
-            windowFrame.targetUpdate(0, 0, scale * controller.gamepadXAccel, scale * controller.gamepadYAccel, windowFrame.mz)
+            windowFrame.targetUpdate(0, 0, scale * controller.gamepadXAccel, scale * controller.gamepadYAccel,
+                                     windowFrame.mz)
         elif not controller.controllerMode:
             pass
-        #try:
-        #Temp fix untill you fix
-        if windowFrame.targetCurrentCoords[2] == None:
-            windowFrame.targetCurrentCoords[2] = 0
+        # try:
+        # Temp fix until you fix
+        # if windowFrame.targetCurrentCoords[2] is None:
+        #    windowFrame.targetCurrentCoords[2] = 0
         allMInfo = calcLoop(windowFrame.targetCurrentCoords, windowFrame.endEffector, lastCoords)
 
-        lastCoords[0] =windowFrame.targetCurrentCoords[0]
-        lastCoords[1] =windowFrame.targetCurrentCoords[1]
-        lastCoords[2] =windowFrame.targetCurrentCoords[2]
+        lastCoords[0] = windowFrame.targetCurrentCoords[0]
+        lastCoords[1] = windowFrame.targetCurrentCoords[1]
+        lastCoords[2] = windowFrame.targetCurrentCoords[2]
 
-        #except TypeError:
+        # except TypeError:
         #    print("Motor Calculation Error [0x0003a]")
         #    allMInfo = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
         for i in range(6):
             allMCAngle[i] = allMInfo[i][1]
 
-        wristX, wristY, wristZ, wristDis, elbowDis, elbowX, elbowY, elbowZ, gripperX, gripperY, gripperZ, gripperDis = GUIUpdate(allMCAngle)
+        wristX, wristY, wristZ, wristDis, elbowDis, elbowX, elbowY, elbowZ, gripperX, gripperY, gripperZ, gripperDis = GUIUpdate(
+            allMCAngle)
 
         windowFrame.updateTopView(wristX, wristY, elbowX, elbowY, gripperX, gripperY)
         windowFrame.updateSideView(wristDis, wristZ, elbowDis, elbowZ, gripperDis, gripperZ)
