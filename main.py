@@ -58,6 +58,7 @@ class windowcls:
         self.top_upperArm = None
         self.top_elbow = None
         self.target = None
+        self.armLimit = None
         self.mx = 0
         self.my = 0
         self.mz = 0
@@ -101,7 +102,8 @@ class windowcls:
             self.topDown.DrawLine((-10, yScaled), (10, yScaled))
             self.topDown.DrawText(y, (10, yScaled + 10), color='blue')
 
-        armLimit = self.topDown.DrawCircle((0, 0), 60 * scale + 1, line_color='red')
+        self.armLimit = self.topDown.DrawCircle((0, 0), 60 * scale + 1, line_color='black')
+        self.topDown.DrawCircle((0, 0), 60 * scale + 1, line_color='red')
         self.target = self.topDown.DrawCircle((0, 0), scale * 1.5, fill_color='blue', line_color='black')
         self.top_upperArm = self.topDown.DrawLine((0, 0), (0, 0))
         self.top_lowerArm = self.topDown.DrawLine((0, 0), (0, 0))
@@ -131,8 +133,11 @@ class windowcls:
         self.side_wrist = self.sideOn.DrawCircle((0, 0), scale * 1.25, fill_color='red', line_color='black')
         self.side_gripper = self.sideOn.DrawCircle((0, 0), scale * 1.25, fill_color='green', line_color='black')
 
-    def updateTopView(self, wristX, wristY, elbowX, elbowY, gripperX, gripperY):
+    def updateTopView(self, wristX, wristY, elbowX, elbowY, gripperX, gripperY, armLimitRad):
         # Top-Down View
+        self.topDown.delete_figure(self.armLimit)
+        self.armLimit = self.topDown.DrawCircle((0, 0), armLimitRad * scale + 1, line_color='black')
+
         self.topDown.delete_figure(self.top_wrist)
         self.top_wrist = self.topDown.DrawCircle((wristX * scale, wristY * scale), scale * 1.5, fill_color='red',
                                                  line_color='black')
@@ -316,10 +321,11 @@ def mainLoop():
         for i in range(6):
             allMCAngle[i] = allMInfo[i][1]
 
-        wristX, wristY, wristZ, wristDis, elbowDis, elbowX, elbowY, elbowZ, gripperX, gripperY, gripperZ, gripperDis = GUIUpdate(
+        wristX, wristY, wristZ, wristDis, elbowDis, elbowX, elbowY, elbowZ, offX, offY, gripperZ, gripperDis, armLimitRad = GUIUpdate(
             allMCAngle)
+        gripperX, gripperY = wristX + offX, wristY + offY
 
-        windowFrame.updateTopView(wristX, wristY, elbowX, elbowY, gripperX, gripperY)
+        windowFrame.updateTopView(wristX, wristY, elbowX, elbowY, gripperX, gripperY, armLimitRad)
         windowFrame.updateSideView(wristDis, wristZ, elbowDis, elbowZ, gripperDis, gripperZ)
         windowFrame.updateMotorInfo(gripperX, gripperY, gripperZ, allMInfo)
 
