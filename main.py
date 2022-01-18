@@ -133,10 +133,10 @@ class windowcls:
         self.side_wrist = self.sideOn.DrawCircle((0, 0), scale * 1.25, fill_color='red', line_color='black')
         self.side_gripper = self.sideOn.DrawCircle((0, 0), scale * 1.25, fill_color='green', line_color='black')
 
-    def updateTopView(self, wristX, wristY, elbowX, elbowY, gripperX, gripperY, armLimitRad):
+    def updateTopView(self, wristX, wristY, elbowX, elbowY, gripperX, gripperY, armLimitRad, offX, offY):
         # Top-Down View
         self.topDown.delete_figure(self.armLimit)
-        self.armLimit = self.topDown.DrawCircle((0, 0), armLimitRad * scale + 1, line_color='black')
+        self.armLimit = self.topDown.DrawCircle((offX * scale, offY * scale), armLimitRad * scale + 1, line_color='black')
 
         self.topDown.delete_figure(self.top_wrist)
         self.top_wrist = self.topDown.DrawCircle((wristX * scale, wristY * scale), scale * 1.5, fill_color='red',
@@ -325,7 +325,7 @@ def mainLoop():
             allMCAngle)
         gripperX, gripperY = wristX + offX, wristY + offY
 
-        windowFrame.updateTopView(wristX, wristY, elbowX, elbowY, gripperX, gripperY, armLimitRad)
+        windowFrame.updateTopView(wristX, wristY, elbowX, elbowY, gripperX, gripperY, armLimitRad, offX, offY)
         windowFrame.updateSideView(wristDis, wristZ, elbowDis, elbowZ, gripperDis, gripperZ)
         windowFrame.updateMotorInfo(gripperX, gripperY, gripperZ, allMInfo)
 
