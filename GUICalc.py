@@ -38,9 +38,7 @@ def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle, mFourCAngle, mFiveCAngle, mSixCA
 
         griDis = griY
 
-        armLimit = 60 - griXY
-
-        return x, y, z, curDistance, midDis, midX, midY, midZ, griX, griY, griZ + z, griDis + curDistance, armLimit
+        return x, y, z, curDistance, midDis, midX, midY, midZ, griX + x, griY + y, griZ + z, griDis + curDistance
     except:
         print("GUI Math Error")
         return 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 60
