@@ -309,8 +309,8 @@ def mainLoop():
         # Temp fix until you fix
         # if windowFrame.targetCurrentCoords[2] is None:
         #    windowFrame.targetCurrentCoords[2] = 0
-        allMInfo = calcLoop(windowFrame.targetCurrentCoords, windowFrame.endEffector, lastCoords)
-
+        allMInfo, Off = calcLoop(windowFrame.targetCurrentCoords, windowFrame.endEffector, lastCoords)
+        offX, offY = Off[0], Off[1]
         lastCoords[0] = windowFrame.targetCurrentCoords[0]
         lastCoords[1] = windowFrame.targetCurrentCoords[1]
         lastCoords[2] = windowFrame.targetCurrentCoords[2]
@@ -321,9 +321,8 @@ def mainLoop():
         for i in range(6):
             allMCAngle[i] = allMInfo[i][1]
 
-        wristX, wristY, wristZ, wristDis, elbowDis, elbowX, elbowY, elbowZ, offX, offY, gripperZ, gripperDis, armLimitRad = GUIUpdate(
+        wristX, wristY, wristZ, wristDis, elbowDis, elbowX, elbowY, elbowZ,gripperX, gripperY, gripperZ, gripperDis, armLimitRad = GUIUpdate(
             allMCAngle)
-        gripperX, gripperY = wristX + offX, wristY + offY
 
         windowFrame.updateTopView(wristX, wristY, elbowX, elbowY, gripperX, gripperY, armLimitRad, offX, offY)
         windowFrame.updateSideView(wristDis, wristZ, elbowDis, elbowZ, gripperDis, gripperZ)
