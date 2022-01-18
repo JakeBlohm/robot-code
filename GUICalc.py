@@ -41,7 +41,7 @@ def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle, mFourCAngle, mFiveCAngle, mSixCA
         return x, y, z, curDistance, midDis, midX, midY, midZ, griX + x, griY + y, griZ + z, griDis + curDistance
     except:
         print("GUI Math Error")
-        return 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 60
+        return 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
 
 def GUIUpdate(allMCAngle):

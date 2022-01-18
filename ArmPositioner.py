@@ -121,7 +121,7 @@ def AllMotorCalc(coords, endEffector, lastCoords):
         zEnd = (soh(endEffector[1], None, END_EFFECTOR_OFFSET))
         x, y, z = coords[0] - xEnd, coords[1] - yEnd, coords[2] - zEnd
         allMTAngle = MotorAngleCalc(x, y, z, xEnd, yEnd, zEnd, endEffector[0], endEffector[1], endEffector[2])
-        Off = [coords[1] - yEnd, coords[2] - zEnd, 60-pT(coords[1] - yEnd, coords[2] - zEnd)]
+        Off = [coords[0] - xEnd, coords[1] - yEnd, 60-pT(coords[0] - xEnd, coords[1] - yEnd)]
         lastCoords = coords
         lastAngles = allMTAngle
         lastOff = Off
