@@ -46,7 +46,7 @@ def calcLoop(coords,endEffector,lastCoords):
     global allMCAngle
 
     coords = CoordsValidation(coords)
-    allMTAngle = AllMotorCalc(coords, endEffector, lastCoords)
+    allMTAngle, Off = AllMotorCalc(coords, endEffector, lastCoords)
     motorOne[0], motorTwo[0], motorThree[0], motorFour[0], motorFive[0], motorSix[0] = allMTAngle
     
     MotorOne.MotorMove(motorOne)
@@ -61,4 +61,4 @@ def calcLoop(coords,endEffector,lastCoords):
 
     time.sleep(1/Motor.CYCLESPERSECOND)
     
-    return allMInfo
+    return allMInfo, Off
