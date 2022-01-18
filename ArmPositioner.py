@@ -45,7 +45,7 @@ MAX_ARM_LENGTH = (SEGMENT_ONE + SEGMENT_TWO + SEGMENT_THREE)
 # Memory
 
 lastAngles = [0, 0, 0, 0, 0, 0]
-lastOff = [0,0]
+lastOff = [0,0,60]
 
 
 # MotorOne position calculation, E is end effector, O is coords offset from segment 3
@@ -121,7 +121,7 @@ def AllMotorCalc(coords, endEffector, lastCoords):
         zEnd = (soh(endEffector[1], None, END_EFFECTOR_OFFSET))
         x, y, z = coords[0] - xEnd, coords[1] - yEnd, coords[2] - zEnd
         allMTAngle = MotorAngleCalc(x, y, z, xEnd, yEnd, zEnd, endEffector[0], endEffector[1], endEffector[2])
-        Off = [coords[1] - yEnd, coords[2] - zEnd]
+        Off = [coords[1] - yEnd, coords[2] - zEnd, 60-pT(coords[1] - yEnd, coords[2] - zEnd)]
         lastCoords = coords
         lastAngles = allMTAngle
         lastOff = Off
