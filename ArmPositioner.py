@@ -45,7 +45,7 @@ MAX_ARM_LENGTH = (SEGMENT_ONE + SEGMENT_TWO + SEGMENT_THREE)
 # Memory
 
 lastAngles = [0, 0, 0, 0, 0, 0]
-lastOff = [0,0,60]
+lastOff = [0, 0, 60]
 
 
 # MotorOne position calculation, E is end effector, O is coords offset from segment 3

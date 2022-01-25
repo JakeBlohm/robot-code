@@ -310,7 +310,7 @@ def mainLoop():
         # if windowFrame.targetCurrentCoords[2] is None:
         #    windowFrame.targetCurrentCoords[2] = 0
         allMInfo, Off = calcLoop(windowFrame.targetCurrentCoords, windowFrame.endEffector, lastCoords)
-        offX, offY, armLimitRad  = Off[0], Off[1], Off[2]
+        offX, offY, armLimitRad = Off[0], Off[1], Off[2]
         lastCoords[0] = windowFrame.targetCurrentCoords[0]
         lastCoords[1] = windowFrame.targetCurrentCoords[1]
         lastCoords[2] = windowFrame.targetCurrentCoords[2]
