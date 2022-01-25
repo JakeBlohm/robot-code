@@ -33,7 +33,11 @@ def getXY(mOneCAngle, mTwoCAngle, mThreeCAngle, mFourCAngle, mFiveCAngle, mSixCA
             
         griXY = pT(griX,griY)
 
-        ang = cah(None, griXY, END_EFFECTOR_OFFSET)
+        if griXY/END_EFFECTOR_OFFSET > 1:
+            ang = 0
+        else:
+            ang = cah(None, griXY, END_EFFECTOR_OFFSET)
+
         griZ = soh(ang, None, END_EFFECTOR_OFFSET)
 
         griDis = griY
