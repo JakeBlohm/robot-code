@@ -71,6 +71,7 @@ class windowcls:
         self.sideOn = self.window['__sideOn__']
         self.initGraphs()
         self.targetCurrentCoords = [0, 0, 0]
+        self.lastCoords = [0, 0, 0]
 
     def targetUpdate(self, mx, my, cx, cy, mz):
         if controller.controllerMode:
@@ -82,9 +83,7 @@ class windowcls:
         else:
             self.topDown.delete_figure(self.target)
             self.target = self.topDown.DrawCircle((mx, my), scale * 1.5, fill_color='blue', line_color='black')
-            self.targetCurrentCoords[0] = mx / scale
-            self.targetCurrentCoords[1] = my / scale
-            self.targetCurrentCoords[2] = mz
+            self.targetCurrentCoords = mx / scale, my / scale, mz
 
     def initGraphs(self):
         # Initialize the shapes drawn to the graph objects
@@ -175,7 +174,7 @@ class windowcls:
                                                      (gripperDis * scale, gripperZ * scale))
 
     def updateMotorInfo(self, gripperX, gripperY, gripperZ, allMInfo):
-        coordinates = 'X:{}, Y:{}, Z:{}'.format(self.mx, self.my, self.mz)
+        coordinates = 'X:{}, Y:{}, Z:{}'.format(self.mx / scale, self.my / scale, self.mz)
         windowFrame.window['__targetCoords__'].update("{}".format(coordinates))
         self.window['__currentCoords__'].update("X:{}, Y:{}, Z:{}".format(int(gripperX), int(gripperY), int(gripperZ)))
         self.window['__mOneRPS__'].update("{}".format(allMInfo[0][3]))
@@ -297,23 +296,22 @@ def controllerLoop():
 
 def mainLoop():
     allMCAngle = [0, 0, 0, 0, 0, 0]
-    lastCoords = [0, 0, 0]
     while True:
         # print(windowFrame.targetCurrentCoords)
         if controller.controllerMode:
             windowFrame.targetUpdate(0, 0, scale * controller.gamepadXAccel, scale * controller.gamepadYAccel,
                                      windowFrame.mz)
         elif not controller.controllerMode:
-            pass
+            windowFrame.targetUpdate(windowFrame.mx, windowFrame.my, 0, 0, windowFrame.mz)
         # try:
         # Temp fix until you fix
         # if windowFrame.targetCurrentCoords[2] is None:
         #    windowFrame.targetCurrentCoords[2] = 0
-        allMInfo, Off = calcLoop(windowFrame.targetCurrentCoords, windowFrame.endEffector, lastCoords)
+        print(windowFrame.targetCurrentCoords, ' | ', windowFrame.lastCoords)
+        coords = windowFrame.targetCurrentCoords
+        allMInfo, Off = calcLoop(coords, windowFrame.endEffector, windowFrame.lastCoords)
         offX, offY, armLimitRad = Off[0], Off[1], Off[2]
-        lastCoords[0] = windowFrame.targetCurrentCoords[0]
-        lastCoords[1] = windowFrame.targetCurrentCoords[1]
-        lastCoords[2] = windowFrame.targetCurrentCoords[2]
+        windowFrame.lastCoords = coords
 
         # except TypeError:
         #    print("Motor Calculation Error [0x0003a]")
@@ -402,10 +400,12 @@ if __name__ == '__main__':
                 windowFrame.mx = values['__topDown__'][0]
                 windowFrame.my = values['__topDown__'][1]
                 windowFrame.mz = float(values['__coordInput__'])
-                windowFrame.targetUpdate(windowFrame.mx, windowFrame.my, 0, 0, windowFrame.mz)
+                windowFrame.endEffector = [float(values['__endEffHori__']), float(values['__endEffVert__']), float(values['__gripperRotation__'])]
         except AttributeError:
             print("Mouse Coordinate Error [0x0001a]")
         except TypeError:
             print("Mouse Coordinate Error [0x0001b]")
+        except ValueError:
+            print("Manual Coordinate Error [0x0003a]")
 
 window.close()
