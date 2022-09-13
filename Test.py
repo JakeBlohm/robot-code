@@ -4,13 +4,17 @@ from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
-cubeVertices = ((0,0,0),(0,0,1),(0,1,1),(0,1,0))
-cubeEdges = ((0,1),(1,2),(2,3),(3,0))
+cubeVertices = ((0,0,0),(0,0,1),(0,1,1),(0,2,0),(0,2,1))
 
 def generateOutline(cubeVertices):
-    for i in range(0,len(cubeVertices)):
+    cubeEdges = []
+    for i in range(0,len(cubeVertices)-1):
+        cubeEdges.append((i,i+1))
+    cubeEdges.append((i+1,0))
+    return cubeEdges
         
-
+cubeEdges = generateOutline(cubeVertices)
+print(cubeEdges)
 
 def wireCube():
     glBegin(GL_LINES)
@@ -36,9 +40,11 @@ def main():
 
         glRotatef(1, 1, 1, 1)
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
+        glLineWidth
         glColor3f(255,255,255)
+        glLineWidth(5)
         wireCube()
-        glColor3f(0,0,255)
+        #glColor3f(0,0,255)
         #solidCube()
         pg.display.flip()
         pg.time.wait(10)
