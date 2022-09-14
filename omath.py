@@ -101,6 +101,10 @@ def np_cos_rule(a=None,b=None,c=None,gamma=None): # gamma always in radians
         denominator = 2*a*b
         return np.acos(numerator/denominator)
 
-def pythagoras(a=None,b=None,c=None):
+def pythagoras(a=None,b=None,c=None): # Basic pythagoras
     if a is None:
-        
+        return c**2 - b**2
+    elif b is None:
+        return c**2 - a**2
+    elif c is None:
+        return a**2 + b**2
