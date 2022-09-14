@@ -1,6 +1,10 @@
 import math
 import numpy as np
 
+def quadratic_discriminant(a,b,c):
+    d = b**2 - 4*a*c
+    return d
+
 def quadratic(a,b,c): # Basic quadratic equation using math, returns a tuple
     discriminant = math.sqrt(b**2 - 4 * a *c)
     denominator = 2*a
